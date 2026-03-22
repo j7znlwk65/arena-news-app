@@ -83,8 +83,8 @@ header{flex-shrink:0;height:88px;width:100%;background:var(--bg);border-bottom:1
 .mc-body{padding:10px 14px 14px;}
 .mc-teams{display:flex;align-items:center;justify-content:space-between;gap:6px;}
 .mc-team{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
-.mc-crest{width:52px;height:52px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--border);flex-shrink:0;}
-.mc-crest img{width:44px;height:44px;object-fit:contain;display:block;}
+.mc-crest{width:52px;height:52px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.mc-crest img{width:48px;height:48px;object-fit:contain;display:block;border-radius:50%;}
 .mc-crest-fb{font-size:26px;}
 .mc-tname{font-size:var(--fmeta);font-weight:700;color:var(--white);text-align:center;font-family:var(--f-body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.2;}
 .mc-score-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;padding:0 6px;}
@@ -110,7 +110,8 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 .foot-copy{font-size:var(--fsmall);color:var(--grey2);font-family:var(--f-body);}
 .foot-links{display:flex;gap:24px;}
 .foot-links a{font-size:var(--fsmall);font-weight:600;color:var(--grey);text-decoration:none;border-bottom:1px solid transparent;transition:all var(--tr);outline:none;padding:2px 0;font-family:var(--f-body);}
-.foot-links a[href="privacy.html"]{color:var(--off);}
+.foot-links a[href="#privacy"]{color:var(--off);}
+#link-privacy{color:var(--off);}
 .foot-links a.focused,.foot-links a:focus{color:var(--white);border-bottom-color:var(--white);outline:none;}
 .foot-ver{font-size:11px;color:var(--grey2);font-family:monospace;letter-spacing:1px;}
 
@@ -163,6 +164,48 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 .dr-pname{font-size:var(--fbody);color:var(--white);font-family:var(--f-body);}
 .dr-ppos{font-size:var(--fsmall);color:var(--grey);margin-left:auto;font-family:var(--f-body);}
 
+/* PRIVACY OVERLAY */
+#privacy-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.85);
+  align-items:center;justify-content:center;
+}
+#privacy-overlay.open{display:flex;}
+#privacy-box{
+  background:#fff;color:#333;
+  width:860px;max-height:780px;
+  border-radius:16px;overflow-y:auto;
+  padding:52px 60px;
+  font-family:'Inter',sans-serif;
+  font-size:16px;line-height:1.7;
+  position:relative;
+}
+#privacy-box::-webkit-scrollbar{width:4px;}
+#privacy-box::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
+#privacy-box h1{
+  color:#034EA2;font-family:'Montserrat',sans-serif;
+  font-size:26px;font-weight:900;
+  border-bottom:2px solid #034EA2;
+  padding-bottom:10px;margin-bottom:20px;
+}
+#privacy-box h2{
+  color:#111;font-family:'Montserrat',sans-serif;
+  font-size:17px;font-weight:700;
+  margin-top:28px;margin-bottom:8px;
+}
+#privacy-box p{margin-bottom:14px;}
+#privacy-box .pv-footer{
+  margin-top:40px;font-size:13px;color:#888;
+  border-top:1px solid #eee;padding-top:16px;
+}
+#privacy-close{
+  position:sticky;top:0;float:right;
+  margin-bottom:8px;
+  background:#034EA2;color:#fff;
+  border:none;border-radius:8px;
+  padding:10px 22px;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Inter',sans-serif;
+}
 /* RESPONSIVE 720p */
 @media(max-width:1280px){
   body{width:1280px;}#app{height:720px;}
@@ -327,72 +370,178 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
   text-transform:uppercase;
 }
 
-/* ── App hidden until splash ends ────────────────────────── */
+/* ── App oculto até o splash terminar ───────────────────────
+   will-change garante que o compositor crie uma camada separada
+   evitando o "pulo" visual no momento da transição.
+─────────────────────────────────────────────────────────────── */
 #app{
   opacity:0;
-  /* app fades in after splash */
+  will-change:opacity;
 }
 #app.app-visible{
   opacity:1;
-  transition:opacity .5s ease .1s;
+  transition:opacity .55s cubic-bezier(.4,0,.2,1) .05s;
 }
 
-/* ── App element entry animations ────────────────────────── */
-/* Header slides down */
+/* ═══════════════════════════════════════════════════════════════
+   APP ENTRY ANIMATIONS  — disparam ao adicionar .app-visible
+   Sequência:
+     0.00s  header desce com bounce leve
+     0.08s  logo pop elástico
+     0.14s  relógio desliza da direita
+     0.10s  nav pill expande via clip-path
+     0.20s+ nav-btns em stagger com blur
+     0.18s  main sobe com scale
+     0.28s  sec-head desliza da esquerda
+     0.38s  linha decorativa expande
+     0.22s  footer sobe
+     0.32s+ links do footer em stagger
+     0.55s  badge de versão
+     live dot pop + retoma blink
+   Cards: stagger via JS (já existente)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Header ─────────────────────────────────────────────────── */
 #app.app-visible header{
-  animation:hdr-in .5s cubic-bezier(.22,1,.36,1) both;
+  animation:hdr-in .6s cubic-bezier(.22,1,.36,1) both;
 }
 @keyframes hdr-in{
-  from{opacity:0;transform:translateY(-24px);}
-  to  {opacity:1;transform:translateY(0);}
+  0%  {opacity:0;transform:translateY(-36px) scaleX(.98);}
+  55% {opacity:1;transform:translateY(3px)   scaleX(1.002);}
+  100%{opacity:1;transform:translateY(0)     scaleX(1);}
 }
 
-/* Nav buttons stagger */
+/* Logo: pop elástico depois que o header chega */
+#app.app-visible .logo{
+  animation:logo-pop .55s cubic-bezier(.34,1.56,.64,1) .08s both;
+}
+@keyframes logo-pop{
+  0%  {opacity:0;transform:scale(.65);}
+  65% {transform:scale(1.07);}
+  100%{opacity:1;transform:scale(1);}
+}
+
+/* Relógio desliza da direita */
+#app.app-visible .hdr-right{
+  animation:clock-in .5s cubic-bezier(.22,1,.36,1) .14s both;
+}
+@keyframes clock-in{
+  from{opacity:0;transform:translateX(28px);}
+  to  {opacity:1;transform:translateX(0);}
+}
+
+/* ── Nav pill expande via clip-path ─────────────────────────── */
+#app.app-visible .nav-wrap{
+  animation:nav-wrap-in .55s cubic-bezier(.22,1,.36,1) .10s both;
+}
+@keyframes nav-wrap-in{
+  from{opacity:0;clip-path:inset(0 100% 0 0 round 100px);}
+  to  {opacity:1;clip-path:inset(0 0%   0 0 round 100px);}
+}
+
+/* ── Nav buttons: stagger + blur dissolve ───────────────────── */
 #app.app-visible .nav-btn{
   animation:nav-btn-in .4s cubic-bezier(.22,1,.36,1) both;
 }
-#app.app-visible .nav-btn:nth-child(2) {animation-delay:.04s;}
-#app.app-visible .nav-btn:nth-child(3) {animation-delay:.08s;}
-#app.app-visible .nav-btn:nth-child(4) {animation-delay:.12s;}
-#app.app-visible .nav-btn:nth-child(5) {animation-delay:.16s;}
-#app.app-visible .nav-btn:nth-child(6) {animation-delay:.20s;}
-#app.app-visible .nav-btn:nth-child(7) {animation-delay:.24s;}
-#app.app-visible .nav-btn:nth-child(8) {animation-delay:.28s;}
+#app.app-visible .nav-btn:nth-child(1) {animation-delay:.20s;}
+#app.app-visible .nav-btn:nth-child(2) {animation-delay:.24s;}
+#app.app-visible .nav-btn:nth-child(3) {animation-delay:.28s;}
+#app.app-visible .nav-btn:nth-child(4) {animation-delay:.32s;}
+#app.app-visible .nav-btn:nth-child(5) {animation-delay:.36s;}
+#app.app-visible .nav-btn:nth-child(6) {animation-delay:.40s;}
+#app.app-visible .nav-btn:nth-child(7) {animation-delay:.44s;}
+#app.app-visible .nav-btn:nth-child(8) {animation-delay:.48s;}
+#app.app-visible .nav-btn:nth-child(9) {animation-delay:.52s;}
+#app.app-visible .nav-btn:nth-child(10){animation-delay:.56s;}
+#app.app-visible .nav-btn:nth-child(11){animation-delay:.60s;}
 @keyframes nav-btn-in{
-  from{opacity:0;transform:translateY(-10px);}
-  to  {opacity:1;transform:translateY(0);}
+  0%  {opacity:0;transform:translateY(-10px) scale(.88);filter:blur(5px);}
+  55% {filter:blur(0);}
+  100%{opacity:1;transform:translateY(0)     scale(1);  filter:blur(0);}
 }
 
-/* Main content rises up */
+/* ── Main area ───────────────────────────────────────────────── */
 #app.app-visible #main{
-  animation:main-in .55s cubic-bezier(.22,1,.36,1) .12s both;
+  animation:main-in .65s cubic-bezier(.22,1,.36,1) .18s both;
 }
 @keyframes main-in{
-  from{opacity:0;transform:translateY(28px);}
-  to  {opacity:1;transform:translateY(0);}
+  0%  {opacity:0;transform:translateY(36px) scale(.982);}
+  60% {transform:translateY(-2px) scale(1.002);}
+  100%{opacity:1;transform:translateY(0)    scale(1);}
 }
 
-/* Match cards stagger fade-up */
+/* Título da seção desliza da esquerda */
+#app.app-visible .sec-head{
+  animation:sec-head-in .55s cubic-bezier(.22,1,.36,1) .28s both;
+}
+@keyframes sec-head-in{
+  from{opacity:0;transform:translateX(-22px);}
+  to  {opacity:1;transform:translateX(0);}
+}
+
+/* Linha decorativa expande da esquerda */
+#app.app-visible .sec-line{
+  animation:sec-line-in .75s cubic-bezier(.22,1,.36,1) .38s both;
+  transform-origin:left center;
+}
+@keyframes sec-line-in{
+  from{transform:scaleX(0);}
+  to  {transform:scaleX(1);}
+}
+
+/* Live dot: pop + retoma blink */
+#app.app-visible .live-dot{
+  animation:live-dot-pop .55s cubic-bezier(.34,1.56,.64,1) .32s both,
+            blink 1s .87s infinite;
+}
+@keyframes live-dot-pop{
+  0%  {opacity:0;transform:scale(0);}
+  70% {transform:scale(1.4);}
+  100%{opacity:1;transform:scale(1);}
+}
+
+/* ── Match cards ─────────────────────────────────────────────── */
 #app.app-visible .match-card{
-  animation:card-in .45s cubic-bezier(.22,1,.36,1) both;
+  animation:card-in .48s cubic-bezier(.22,1,.36,1) both;
 }
-/* Cards get stagger delay via JS after render — see boot */
+@keyframes card-in{
+  0%  {opacity:0;transform:translateY(28px) scale(.95);}
+  62% {transform:translateY(-2px) scale(1.004);}
+  100%{opacity:1;transform:translateY(0)    scale(1);}
+}
 
-/* Footer slides up */
+/* ── Footer ─────────────────────────────────────────────────── */
 #app.app-visible footer{
-  animation:foot-in .4s cubic-bezier(.22,1,.36,1) .2s both;
+  animation:foot-in .5s cubic-bezier(.22,1,.36,1) .22s both;
 }
 @keyframes foot-in{
-  from{opacity:0;transform:translateY(16px);}
+  0%  {opacity:0;transform:translateY(22px);}
+  60% {transform:translateY(-2px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+
+/* Links do footer em stagger */
+#app.app-visible .foot-links a{
+  animation:foot-link-in .38s cubic-bezier(.22,1,.36,1) both;
+}
+#app.app-visible .foot-links a:nth-child(1){animation-delay:.32s;}
+#app.app-visible .foot-links a:nth-child(2){animation-delay:.40s;}
+#app.app-visible .foot-links a:nth-child(3){animation-delay:.48s;}
+@keyframes foot-link-in{
+  from{opacity:0;transform:translateY(10px);}
   to  {opacity:1;transform:translateY(0);}
 }
 
-@keyframes card-in{
-  from{opacity:0;transform:translateY(20px);}
-  to  {opacity:1;transform:translateY(0);}
+/* Badge de versão: aparece por último com letter-spacing */
+#app.app-visible .foot-ver{
+  animation:foot-ver-in .45s ease .55s both;
+}
+@keyframes foot-ver-in{
+  from{opacity:0;letter-spacing:5px;}
+  to  {opacity:1;letter-spacing:1px;}
 }
 
-/* ── TELA DE ERRO / SEM CONEXÃO ───────────────────────────── */
+/* ── TELA DE ERRO / SEM CONEXÃO ─────────────────────────────── */
 .error-state{
   grid-column:1/-1;
   padding:72px 0;
@@ -482,6 +631,7 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
   <nav role="navigation" aria-label="Filtro de campeonatos" id="nav-wrap" class="nav-wrap">
     <div class="nav-track" id="nav-track"></div>
     <button class="nav-btn active focusable" tabindex="0" data-filter="all">Todos</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="mytime">⭐ Meu Time</button>
     <button class="nav-btn focusable" tabindex="0" data-filter="champions">Champions League</button>
     <button class="nav-btn focusable" tabindex="0" data-filter="premier">Premier League</button>
     <button class="nav-btn focusable" tabindex="0" data-filter="laliga">La Liga</button>
@@ -521,7 +671,7 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 <footer>
   <p class="foot-copy">© 2025 Arena. Todos os direitos reservados.</p>
   <div class="foot-links">
-    <a href="privacy.html" class="focusable" tabindex="0">Política de Privacidade</a>
+    <a href="#" id="link-privacy" class="focusable" tabindex="0">Política de Privacidade</a>
     <a href="#"            class="focusable" tabindex="0">Termos de Uso</a>
     <a href="#"            class="focusable" tabindex="0">Sobre</a>
   </div>
@@ -531,6 +681,24 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 <!-- DRAWER -->
 <div id="drawer-overlay"></div>
 <div id="drawer" role="dialog" aria-modal="true" aria-label="Detalhes da partida"></div>
+
+<!-- PRIVACY OVERLAY -->
+<div id="privacy-overlay" role="dialog" aria-modal="true" aria-label="Política de Privacidade">
+  <div id="privacy-box">
+    <button id="privacy-close" aria-label="Fechar">✕ Fechar</button>
+    <h1>Política de Privacidade</h1>
+    <p>O aplicativo <strong>Arena Sports</strong> está comprometido em proteger sua privacidade.</p>
+    <h2>1. Coleta de Dados</h2>
+    <p>Este aplicativo não coleta, armazena ou processa quaisquer dados pessoais do usuário. Não solicitamos permissões de acesso a contatos, localização, microfone ou câmera.</p>
+    <h2>2. Uso de Conteúdo</h2>
+    <p>O Arena Sports funciona como um agregador de resultados esportivos públicos. O processamento de dados ocorre apenas para a exibição técnica do conteúdo na Smart TV.</p>
+    <h2>3. Cookies e Rastreamento</h2>
+    <p>Não utilizamos cookies de rastreamento ou identificadores de publicidade para perfilar nossos usuários.</p>
+    <h2>4. Segurança</h2>
+    <p>Todas as comunicações entre o aplicativo e os servidores são feitas através de protocolos seguros (HTTPS).</p>
+    <div class="pv-footer">© 2026 Arena Sports — Samsung Smart TV Edition.</div>
+  </div>
+</div>
 
 </div><!-- #app -->
 
@@ -542,13 +710,10 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
    100% funcional sem internet. Dados simulados realistas.
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── ESCUDOS INLINE — SVG gerado em JS, zero URLs externas ───
-   Cada time tem: cor primária, cor secundária, iniciais.
-   Resultado: escudo sempre visível, em qualquer rede ou offline. */
-var TEAM_STYLE = {
-  /* FUTEBOL — Europa */
+/* ── ESCUDOS SVG INLINE — zero URLs externas ─────────────── */
+var TS={
   'Real Madrid':     {bg:'#ffffff',fg:'#00529f',b:'#00529f',t:'RM'},
-  'Barcelona':       {bg:'#a50044',fg:'#004d98',b:'#edbb00',t:'FCB'},
+  'Barcelona':       {bg:'#a50044',fg:'#ffffff',b:'#edbb00',t:'FCB'},
   'Man City':        {bg:'#6cabdd',fg:'#ffffff',b:'#1c2c5b',t:'MC'},
   'Bayern München':  {bg:'#dc052d',fg:'#ffffff',b:'#0066b2',t:'FCB'},
   'PSG':             {bg:'#004170',fg:'#ffffff',b:'#da291c',t:'PSG'},
@@ -560,63 +725,55 @@ var TEAM_STYLE = {
   'Arsenal':         {bg:'#ef0107',fg:'#ffffff',b:'#063672',t:'AFC'},
   'Chelsea':         {bg:'#034694',fg:'#ffffff',b:'#034694',t:'CFC'},
   'Porto':           {bg:'#003da5',fg:'#ffffff',b:'#ffd700',t:'FCP'},
-  /* FUTEBOL — Premier */
   'Man United':      {bg:'#da291c',fg:'#ffffff',b:'#fbe122',t:'MU'},
   'Tottenham':       {bg:'#132257',fg:'#ffffff',b:'#132257',t:'THF'},
-  'Newcastle':       {bg:'#241f20',fg:'#ffffff',b:'#241f20',t:'NUF'},
+  'Newcastle':       {bg:'#241f20',fg:'#ffffff',b:'#aaaaaa',t:'NUF'},
   'Aston Villa':     {bg:'#95bfe5',fg:'#670e36',b:'#670e36',t:'AV'},
   'Brighton':        {bg:'#0057b8',fg:'#ffffff',b:'#ffd700',t:'BHA'},
   'West Ham':        {bg:'#7a263a',fg:'#ffffff',b:'#1bb1e7',t:'WHU'},
-  /* FUTEBOL — La Liga */
   'Atletico':        {bg:'#cb3524',fg:'#ffffff',b:'#272560',t:'ATM'},
   'Sevilla':         {bg:'#d91a21',fg:'#ffffff',b:'#d91a21',t:'SEV'},
   'Valencia':        {bg:'#ff7900',fg:'#000000',b:'#000000',t:'VCF'},
   'Athletic Bilbao': {bg:'#ee2523',fg:'#ffffff',b:'#ffffff',t:'ATH'},
   'Real Sociedad':   {bg:'#0267b0',fg:'#ffffff',b:'#000000',t:'RS'},
   'Villarreal':      {bg:'#f7d500',fg:'#000000',b:'#004d99',t:'VIL'},
-  /* FUTEBOL — Serie A */
-  'Juventus':        {bg:'#000000',fg:'#ffffff',b:'#000000',t:'JUV'},
+  'Juventus':        {bg:'#000000',fg:'#ffffff',b:'#333333',t:'JUV'},
   'Napoli':          {bg:'#12a0c3',fg:'#ffffff',b:'#003087',t:'SSC'},
   'Roma':            {bg:'#8e1f2f',fg:'#ffd700',b:'#ffd700',t:'ASR'},
-  'Lazio':           {bg:'#87d8f7',fg:'#ffffff',b:'#193f8d',t:'LAZ'},
+  'Lazio':           {bg:'#87d8f7',fg:'#003087',b:'#193f8d',t:'LAZ'},
   'Atalanta':        {bg:'#1e3799',fg:'#000000',b:'#000000',t:'ATA'},
   'Fiorentina':      {bg:'#4b0082',fg:'#ffffff',b:'#4b0082',t:'FIO'},
-  /* FUTEBOL — Bundesliga */
   'Leverkusen':      {bg:'#e32221',fg:'#000000',b:'#000000',t:'B04'},
   'RB Leipzig':      {bg:'#dd0741',fg:'#ffffff',b:'#ffffff',t:'RBL'},
   'Stuttgart':       {bg:'#e32221',fg:'#ffffff',b:'#ffffff',t:'VFB'},
   'Eintracht':       {bg:'#e1000f',fg:'#000000',b:'#000000',t:'SGE'},
   'Freiburg':        {bg:'#e1000f',fg:'#ffffff',b:'#000000',t:'SCF'},
-  /* FUTEBOL — Ligue 1 */
   'Monaco':          {bg:'#e8192c',fg:'#ffffff',b:'#ffffff',t:'ASM'},
   'Marseille':       {bg:'#2faee0',fg:'#ffffff',b:'#009fc3',t:'OM'},
   'Lyon':            {bg:'#003d8e',fg:'#ffffff',b:'#c8102e',t:'OL'},
   'Nice':            {bg:'#c8102e',fg:'#ffffff',b:'#000000',t:'OGC'},
   'Lens':            {bg:'#e9c427',fg:'#c8102e',b:'#c8102e',t:'RC'},
   'Lille':           {bg:'#c8102e',fg:'#ffffff',b:'#c8102e',t:'LSC'},
-  /* FUTEBOL — Brasileirão */
   'Flamengo':        {bg:'#e3001b',fg:'#000000',b:'#000000',t:'FLA'},
   'Palmeiras':       {bg:'#006437',fg:'#ffffff',b:'#006437',t:'PAL'},
   'Corinthians':     {bg:'#000000',fg:'#ffffff',b:'#000000',t:'COR'},
   'São Paulo':       {bg:'#e30613',fg:'#ffffff',b:'#ffffff',t:'SPF'},
   'Fluminense':      {bg:'#6b1d3a',fg:'#ffffff',b:'#00a859',t:'FLU'},
   'Atlético-MG':     {bg:'#000000',fg:'#ffffff',b:'#000000',t:'GAL'},
-  'Botafogo':        {bg:'#000000',fg:'#ffffff',b:'#000000',t:'BOT'},
+  'Botafogo':        {bg:'#000000',fg:'#ffffff',b:'#aaaaaa',t:'BOT'},
   'Grêmio':          {bg:'#0077c0',fg:'#000000',b:'#000000',t:'GRE'},
-  'Internacional':   {bg:'#d4021d',fg:'#ffffff',b:'#d4021d',t:'INT'},
-  'Santos':          {bg:'#000000',fg:'#ffffff',b:'#000000',t:'SFC'},
-  /* NBA */
+  'Internacional':   {bg:'#d4021d',fg:'#ffffff',b:'#d4021d',t:'COL'},
+  'Santos':          {bg:'#000000',fg:'#ffffff',b:'#aaaaaa',t:'SFC'},
   'Lakers':          {bg:'#552583',fg:'#fdb927',b:'#fdb927',t:'LAL'},
   'Warriors':        {bg:'#1d428a',fg:'#ffc72c',b:'#ffc72c',t:'GSW'},
   'Celtics':         {bg:'#007a33',fg:'#ffffff',b:'#ba9653',t:'BOS'},
   'Bulls':           {bg:'#ce1141',fg:'#000000',b:'#000000',t:'CHI'},
-  'Nets':            {bg:'#000000',fg:'#ffffff',b:'#000000',t:'BKN'},
+  'Nets':            {bg:'#000000',fg:'#ffffff',b:'#333333',t:'BKN'},
   'Heat':            {bg:'#98002e',fg:'#f9a01b',b:'#000000',t:'MIA'},
   'Knicks':          {bg:'#006bb6',fg:'#f58426',b:'#f58426',t:'NYK'},
   'Nuggets':         {bg:'#0e2240',fg:'#fec524',b:'#8b2131',t:'DEN'},
   'Thunder':         {bg:'#007ac1',fg:'#ef3b24',b:'#002d62',t:'OKC'},
   'Suns':            {bg:'#1d1160',fg:'#e56020',b:'#63717a',t:'PHX'},
-  /* EuroLeague */
   'CSKA Moscow':     {bg:'#c8102e',fg:'#ffffff',b:'#003087',t:'CSK'},
   'Olympiacos':      {bg:'#c8102e',fg:'#ffffff',b:'#c8102e',t:'OLY'},
   'Real Madrid B':   {bg:'#ffffff',fg:'#00529f',b:'#00529f',t:'RM'},
@@ -624,38 +781,143 @@ var TEAM_STYLE = {
   'Panathinaikos':   {bg:'#006400',fg:'#ffffff',b:'#006400',t:'PAO'},
   'Anadolu Efes':    {bg:'#1f3a8f',fg:'#e8c200',b:'#e8c200',t:'EFS'}
 };
+function mkShield(name,sz){
+  sz=sz||44;
+  var s=TS[name]||{bg:'#1a1a2e',fg:'#ffffff',b:'#333',t:(name||'?').replace(/\s+/g,'').slice(0,3).toUpperCase()};
+  var r=Math.round(sz*0.5); /* circulo perfeito */
+  var cx=sz/2;
+  var fs=s.t.length<=2?Math.round(sz*0.36):s.t.length===3?Math.round(sz*0.28):Math.round(sz*0.22);
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'">'
+    +'<circle cx="'+cx+'" cy="'+cx+'" r="'+cx+'" fill="'+s.bg+'"/>'
+    +'<circle cx="'+cx+'" cy="'+cx+'" r="'+cx+'" fill="'+s.b+'" opacity="0.25"/>'
+    +'<text x="'+cx+'" y="'+(sz*0.56)+'" text-anchor="middle" dominant-baseline="middle"'
+    +' font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="'+fs+'" fill="'+s.fg+'">'+s.t+'</text>'
+    +'</svg>';
+  return 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+}
+function logo(name){return mkShield(name,44);}
 
-/* Gera SVG de escudo inline — nunca falha */
-function makeShield(name, size){
-  size = size || 44;
-  var s = TEAM_STYLE[name] || {bg:'#1a1a2e',fg:'#ffffff',b:'#444',t:(name||'?').slice(0,3).toUpperCase()};
-  var r  = Math.round(size * 0.12);
-  var cx = size / 2;
-  /* Texto: tamanho adaptado ao número de letras */
-  var fs = s.t.length <= 2 ? Math.round(size * 0.36)
-         : s.t.length === 3 ? Math.round(size * 0.28)
-         : Math.round(size * 0.22);
-  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'
-    + '<rect width="'+size+'" height="'+size+'" rx="'+r+'" fill="'+s.bg+'"/>'
-    + '<rect x="0" y="'+(size*0.78)+'" width="'+size+'" height="'+(size*0.22)+'" rx="0" fill="'+s.b+'" opacity="0.55"/>'
-    + '<rect x="0" y="'+(size*0.78)+'" width="'+size+'" height="'+r+'" fill="'+s.b+'" opacity="0.55"/>'
-    + '<rect x="0" y="'+(size-r)+'" width="'+size+'" height="'+r+'" rx="'+r+'" fill="'+s.b+'" opacity="0.55"/>'
-    + '<text x="'+cx+'" y="'+(size*0.58)+'" text-anchor="middle" dominant-baseline="middle"'
-    + ' font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="'+fs+'" fill="'+s.fg+'" letter-spacing="-1">'+s.t+'</text>'
-    + '</svg>';
-  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+/* ── SISTEMA DE LOGOS COM FALLBACK ──────────────────────────
+ * Cadeia por imagem:
+ *   1. footylogos.com   (fonte principal)
+ *   2. footballlogos.org (fonte alternativa)
+ *   3. upload.wikimedia.org (backup universal)
+ *   4. mkShield() SVG inline (placeholder — nunca falha)
+ * dataset.fb conta quantas tentativas já ocorreram.
+ * ─────────────────────────────────────────────────────────── */
+var LOGO_MAP={
+  /* Champions / Europa */
+  'Real Madrid':     {s1:'real-madrid',          s2:'real-madrid',          wiki:'en/5/56/Real_Madrid_CF.svg'},
+  'Barcelona':       {s1:'barcelona',             s2:'barcelona',             wiki:'en/4/47/FC_Barcelona_%28crest%29.svg'},
+  'Man City':        {s1:'manchester-city',       s2:'manchester-city',       wiki:'en/e/eb/Manchester_City_FC_badge.svg'},
+  'Bayern München':  {s1:'bayern-munich',         s2:'bayern-munich',         wiki:'commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282002%E2%80%932017%29.svg'},
+  'PSG':             {s1:'paris-saint-germain',   s2:'paris-saint-germain',   wiki:'en/a/a7/Paris_Saint-Germain_F.C..svg'},
+  'Liverpool':       {s1:'liverpool',             s2:'liverpool',             wiki:'en/0/0c/Liverpool_FC.svg'},
+  'Dortmund':        {s1:'borussia-dortmund',     s2:'borussia-dortmund',     wiki:'commons/6/67/Borussia_Dortmund_logo.svg'},
+  'Inter':           {s1:'inter-milan',           s2:'inter-milan',           wiki:'commons/0/05/FC_Internazionale_Milano_2021.svg'},
+  'AC Milan':        {s1:'ac-milan',              s2:'ac-milan',              wiki:'commons/d/d0/Logo_of_AC_Milan.svg'},
+  'Atletico Madrid': {s1:'atletico-madrid',       s2:'atletico-madrid',       wiki:'en/f/f4/Atletico_Madrid_2017_logo.svg'},
+  'Arsenal':         {s1:'arsenal',               s2:'arsenal',               wiki:'en/5/53/Arsenal_FC.svg'},
+  'Chelsea':         {s1:'chelsea',               s2:'chelsea',               wiki:'en/c/cc/Chelsea_FC.svg'},
+  'Porto':           {s1:'fc-porto',              s2:'fc-porto',              wiki:'commons/3/3c/FC_Porto.svg'},
+  /* Premier League */
+  'Man United':      {s1:'manchester-united',     s2:'manchester-united',     wiki:'en/7/7a/Manchester_United_FC_crest.svg'},
+  'Tottenham':       {s1:'tottenham-hotspur',     s2:'tottenham-hotspur',     wiki:'en/b/b4/Tottenham_Hotspur.svg'},
+  'Newcastle':       {s1:'newcastle-united',      s2:'newcastle-united',      wiki:'en/5/56/Newcastle_United_Logo.svg'},
+  'Aston Villa':     {s1:'aston-villa',           s2:'aston-villa',           wiki:'en/f/f9/Aston_Villa_FC_crest_%282016%29.svg'},
+  'Brighton':        {s1:'brighton',              s2:'brighton',              wiki:'en/f/fd/Brighton_%26_Hove_Albion_logo.svg'},
+  'West Ham':        {s1:'west-ham-united',       s2:'west-ham-united',       wiki:'en/c/c2/West_Ham_United_FC_logo.svg'},
+  /* La Liga */
+  'Atletico':        {s1:'atletico-madrid',       s2:'atletico-madrid',       wiki:'en/f/f4/Atletico_Madrid_2017_logo.svg'},
+  'Sevilla':         {s1:'sevilla',               s2:'sevilla',               wiki:'en/3/3b/Sevilla_FC_logo.svg'},
+  'Valencia':        {s1:'valencia',              s2:'valencia',              wiki:'en/c/ce/Valenciacf.svg'},
+  'Athletic Bilbao': {s1:'athletic-bilbao',       s2:'athletic-bilbao',       wiki:'en/9/98/Club_Athletic_de_Bilbao_logo.svg'},
+  'Real Sociedad':   {s1:'real-sociedad',         s2:'real-sociedad',         wiki:'en/f/f1/Real_Sociedad_logo.svg'},
+  'Villarreal':      {s1:'villarreal',            s2:'villarreal',            wiki:'en/b/b9/Villarreal_CF_logo-en.svg'},
+  /* Serie A */
+  'Juventus':        {s1:'juventus',              s2:'juventus',              wiki:'commons/1/15/Juventus_FC_2017_logo.svg'},
+  'Napoli':          {s1:'napoli',                s2:'napoli',                wiki:'commons/2/2d/SSC_Napoli_2007.svg'},
+  'Roma':            {s1:'as-roma',               s2:'as-roma',               wiki:'en/f/f7/AS_Roma_logo_%282013%29.svg'},
+  'Lazio':           {s1:'lazio',                 s2:'lazio',                 wiki:'en/7/71/SS_Lazio_Badge.svg'},
+  'Atalanta':        {s1:'atalanta',              s2:'atalanta',              wiki:'commons/0/0b/Logo_Atalanta_BC_%281963%29.svg'},
+  'Fiorentina':      {s1:'fiorentina',            s2:'fiorentina',            wiki:'commons/4/4b/ACF_Fiorentina_Badge_2022.png'},
+  /* Bundesliga */
+  'Leverkusen':      {s1:'bayer-leverkusen',      s2:'bayer-leverkusen',      wiki:'en/5/59/Bayer_04_Leverkusen_logo.svg'},
+  'RB Leipzig':      {s1:'rb-leipzig',            s2:'rb-leipzig',            wiki:'en/0/04/RB_Leipzig_2014_logo.svg'},
+  'Stuttgart':       {s1:'vfb-stuttgart',         s2:'vfb-stuttgart',         wiki:'commons/e/eb/VfB_Stuttgart_1893_Logo.svg'},
+  'Eintracht':       {s1:'eintracht-frankfurt',   s2:'eintracht-frankfurt',   wiki:'commons/0/04/Eintracht_Frankfurt_Logo.svg'},
+  'Freiburg':        {s1:'sc-freiburg',           s2:'sc-freiburg',           wiki:'de/f/f7/SCFreiburg.svg'},
+  /* Ligue 1 */
+  'Monaco':          {s1:'as-monaco',             s2:'as-monaco',             wiki:'en/e/ea/AS_Monaco_FC.svg'},
+  'Marseille':       {s1:'marseille',             s2:'marseille',             wiki:'commons/d/d8/Olympique_Marseille_logo.svg'},
+  'Lyon':            {s1:'lyon',                  s2:'lyon',                  wiki:'en/e/e4/Olympique_Lyonnais.svg'},
+  'Nice':            {s1:'ogc-nice',              s2:'ogc-nice',              wiki:'en/c/cd/OGC_Nice_logo.svg'},
+  'Lens':            {s1:'rc-lens',               s2:'rc-lens',               wiki:'en/4/43/Racing_Club_de_Lens_logo.svg'},
+  'Lille':           {s1:'lille',                 s2:'lille',                 wiki:'en/b/bc/Lille_OSC_logo.svg'},
+  /* Brasileirão */
+  'Flamengo':        {s1:'flamengo',              s2:'flamengo',              wiki:'commons/2/2e/Flamengo_braz_logo.svg'},
+  'Palmeiras':       {s1:'palmeiras',             s2:'palmeiras',             wiki:'commons/1/10/Palmeiras_logo.svg'},
+  'Corinthians':     {s1:'corinthians',           s2:'corinthians',           wiki:'en/6/63/SC_Corinthians_logo.png'},
+  'São Paulo':       {s1:'sao-paulo',             s2:'sao-paulo',             wiki:'commons/6/6f/S%C3%A3o_Paulo_FC_logo.svg'},
+  'Fluminense':      {s1:'fluminense',            s2:'fluminense',            wiki:'commons/4/43/Fluminense_FC_logo.svg'},
+  'Atlético-MG':     {s1:'atletico-mineiro',      s2:'atletico-mineiro',      wiki:'commons/2/26/Atletico_mineiro_galo.png'},
+  'Botafogo':        {s1:'botafogo',              s2:'botafogo',              wiki:'commons/e/e3/Botafogo_de_Futebol_e_Regatas_logo.svg'},
+  'Grêmio':          {s1:'gremio',                s2:'gremio',                wiki:'en/f/f1/Gr%C3%AAmio_Foot-Ball_Porto_Alegrense_logo.svg'},
+  'Internacional':   {s1:'internacional',         s2:'internacional',         wiki:'commons/6/6b/Internacional_de_Porto_Alegre_logo.svg'},
+  'Santos':          {s1:'santos-fc',             s2:'santos-fc',             wiki:'en/8/86/Santos_FC_Logo.svg'},
+  /* NBA */
+  'Lakers':          {s1:'los-angeles-lakers',    s2:'los-angeles-lakers',    wiki:'commons/3/3c/Los_Angeles_Lakers_logo.svg'},
+  'Warriors':        {s1:'golden-state-warriors', s2:'golden-state-warriors', wiki:'en/0/01/Golden_State_Warriors_logo.svg'},
+  'Celtics':         {s1:'boston-celtics',        s2:'boston-celtics',        wiki:'en/8/8f/Boston_Celtics.svg'},
+  'Bulls':           {s1:'chicago-bulls',         s2:'chicago-bulls',         wiki:'en/d/d1/Chicago_Bulls_logo.svg'},
+  'Nets':            {s1:'brooklyn-nets',         s2:'brooklyn-nets',         wiki:'commons/4/44/Brooklyn_Nets_newlogo.svg'},
+  'Heat':            {s1:'miami-heat',            s2:'miami-heat',            wiki:'en/f/fb/Miami_Heat_logo.svg'},
+  'Knicks':          {s1:'new-york-knicks',       s2:'new-york-knicks',       wiki:'en/2/25/New_york_knicks_logo.svg'},
+  'Nuggets':         {s1:'denver-nuggets',        s2:'denver-nuggets',        wiki:'en/7/76/Denver_Nuggets.svg'},
+  'Thunder':         {s1:'oklahoma-city-thunder', s2:'oklahoma-city-thunder', wiki:'en/5/5c/Oklahoma_City_Thunder.svg'},
+  'Suns':            {s1:'phoenix-suns',          s2:'phoenix-suns',          wiki:'en/d/dc/Phoenix_Suns_logo.svg'},
+  /* EuroLeague */
+  'CSKA Moscow':     {s1:'cska-moscow',           s2:'cska-moscow',           wiki:'en/e/e1/CSKA_Moscow_%28basketball%29_logo.svg'},
+  'Olympiacos':      {s1:'olympiacos',            s2:'olympiacos',            wiki:'en/d/df/Olympiacos_BC_logo.png'},
+  'Real Madrid B':   {s1:'real-madrid',           s2:'real-madrid',           wiki:'en/5/56/Real_Madrid_CF.svg'},
+  'Fenerbahçe':      {s1:'fenerbahce',            s2:'fenerbahce',            wiki:'en/5/5d/Fenerbahce.svg'},
+  'Panathinaikos':   {s1:'panathinaikos',         s2:'panathinaikos',         wiki:'en/9/90/Panathinaikos_BC_logo.svg'},
+  'Anadolu Efes':    {s1:'anadolu-efes',          s2:'anadolu-efes',          wiki:'en/f/f0/Anadolu_Efes_S.K._logo.svg'}
+};
+
+function _svgPh(name){
+  var t=(name||'?').replace(/\s+/g,'').slice(0,3).toUpperCase();
+  var s=TS[name]||{bg:'#1a1a2e',fg:'#ffffff',b:'#333'};
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">'
+    +'<circle cx="22" cy="22" r="22" fill="'+s.bg+'"/>'
+    +'<circle cx="22" cy="22" r="22" fill="'+s.b+'" opacity="0.25"/>'
+    +'<text x="22" y="25" text-anchor="middle" dominant-baseline="middle"'
+    +' font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="'+(t.length<=2?16:t.length===3?13:10)+'" fill="'+s.fg+'">'+t+'</text>'
+    +'</svg>';
+  return 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
 }
 
-function logo(name){ return makeShield(name, 44); }
-
-function crestHtml(team){
-  var src = makeShield(team.name, 44);
-  return '<div class="mc-crest"><img src="'+src+'" alt="'+team.name+'" width="44" height="44"/></div>';
+function getTeamLogo(name){
+  var m=LOGO_MAP[name];
+  return m?'https://www.footylogos.com/logos/'+m.s1+'.png':mkShield(name,44);
 }
 
-function drCrestHtml(team){
-  var src = makeShield(team.name, 60);
-  return '<div class="dr-crest"><img src="'+src+'" alt="'+team.name+'" width="60" height="60"/></div>';
+function logoFallbackAttr(name){
+  var m=LOGO_MAP[name];
+  if(!m) return 'onerror="this.onerror=null;"';
+  var s2='https://footballlogos.org/logos/'+m.s2+'.png';
+  var s3=m.wiki?'https://upload.wikimedia.org/wikipedia/'+m.wiki:'';
+  var ph=_svgPh(name);
+  function q(u){return u.replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+  if(s3){
+    return "onerror=\"var s=this,n=parseInt(s.dataset.fb||0);s.dataset.fb=n+1;"
+      +"if(n===0){s.src='"+q(s2)+"';}"
+      +"else if(n===1){s.src='"+q(s3)+"';}"
+      +"else{s.onerror=null;s.src='"+q(ph)+"';}\"";
+  }
+  return "onerror=\"var s=this,n=parseInt(s.dataset.fb||0);s.dataset.fb=n+1;"
+    +"if(n===0){s.src='"+q(s2)+"';}"
+    +"else{s.onerror=null;s.src='"+q(ph)+"';}\"";
 }
 
 /* ── ESCALAÇÕES MOCK ───────────────────────────────────────── */
@@ -1199,9 +1461,17 @@ MOCK.all = (function(){
   return list;
 })();
 
+/* ── FAVORITO ─────────────────────────────────────────────── */
+var favTeam='';
+try{favTeam=localStorage.getItem('arena_fav')||'';}catch(e){}
+function saveFav(name){
+  favTeam=(favTeam===name)?'':name;
+  try{localStorage.setItem('arena_fav',favTeam);}catch(e){}
+}
+
 /* ── LABELS ────────────────────────────────────────────────── */
 var LABELS = {
-  all:'Jogos de Hoje', champions:'Champions League',
+  all:'Jogos de Hoje', mytime:'⭐ Meu Time', champions:'Champions League',
   premier:'Premier League', laliga:'La Liga', serie_a:'Serie A',
   bundesliga:'Bundesliga', ligue1:'Ligue 1', brasileirao:'Brasileirão',
   nba:'NBA', euroleague:'EuroLeague'
@@ -1225,6 +1495,18 @@ function scoreHtml(m){
         +'<span style="color:var(--grey2);margin:0 2px;font-size:28px;">:</span>'
         +m.score.a+'</div>'
         +'<div class="mc-min">'+(m.status==='live'?m.min:'FT')+'</div>';
+}
+
+function crestHtml(team){
+  var src=getTeamLogo(team.name);
+  var fb=logoFallbackAttr(team.name);
+  return '<div class="mc-crest"><img src="'+src+'" alt="'+team.name+'" loading="lazy" '+fb+'/></div>';
+}
+
+function drCrestHtml(team){
+  var src=getTeamLogo(team.name);
+  var fb=logoFallbackAttr(team.name);
+  return '<div class="dr-crest"><img src="'+src+'" alt="'+team.name+'" '+fb+'/></div>';
 }
 
 var currentFixtures = [];
@@ -1277,8 +1559,20 @@ function showLoading(title){
 function loadFilter(filter){
   var lbl=LABELS[filter]||filter;
   document.getElementById('main-title').textContent=lbl;
-  document.getElementById('live-dot').style.display=filter==='live'?'block':'none';
-  var list=MOCK[filter]||[];
+  document.getElementById('live-dot').style.display='none';
+  var list=[];
+  if(filter==='mytime'){
+    if(!favTeam){
+      var g=document.getElementById('matches-grid');
+      g.innerHTML='<div class="empty-state" style="grid-column:1/-1;padding-top:80px;">Nenhum time favorito.<br><span style="font-size:var(--fmeta);color:var(--grey2);margin-top:8px;display:block;">Abra um jogo e toque em ☆ Favoritar para seguir um time.</span></div>';
+      document.getElementById('match-count').textContent='';
+      currentFixtures=[];rebuildZones();detectCols();return;
+    }
+    var allKeys=['champions','premier','laliga','serie_a','bundesliga','ligue1','brasileirao','nba','euroleague'];
+    for(var ak=0;ak<allKeys.length;ak++){var arr=MOCK[allKeys[ak]];for(var ai=0;ai<arr.length;ai++){if(arr[ai].home.name===favTeam||arr[ai].away.name===favTeam)list.push(arr[ai]);}}
+  } else {
+    list=MOCK[filter]||[];
+  }
   list=list.slice().sort(function(a,b){
     var o={live:0,soon:1,ft:2};
     return (o[a.status]||1)-(o[b.status]||1);
@@ -1331,6 +1625,7 @@ function openDrawer(m){
       +'</div></div>';
   }
 
+  var isFavHome=(favTeam===m.home.name),isFavAway=(favTeam===m.away.name);
   drawerEl.innerHTML=
     '<div class="dr-header">'
     +'<div class="dr-back">← Pressione VOLTAR para fechar</div>'
@@ -1340,12 +1635,14 @@ function openDrawer(m){
     +'</div>'
     +'<div class="dr-score-block">'
     +'<div class="dr-teams-row">'
-    +'<div class="dr-club">'+drCrestHtml(m.home)+'<div class="dr-cname">'+m.home.name+'</div></div>'
+    +'<div class="dr-club">'+drCrestHtml(m.home)+'<div class="dr-cname">'+m.home.name+'</div>'
+    +'<button class="dr-fav-btn" data-t="'+m.home.name+'" style="background:transparent;border:1px solid var(--border);border-radius:100px;padding:3px 14px;font-size:var(--fsmall);color:'+(isFavHome?'#f59e0b':'var(--grey)')+';cursor:pointer;margin-top:6px;font-family:var(--f-body);font-weight:700;">'+(isFavHome?'★ Favorito':'☆ Favoritar')+'</button></div>'
     +'<div class="dr-score-center">'
     +'<div class="dr-score '+scoreCls+'">'+scoreTxt+'</div>'
     +'<div class="dr-status-badge '+statusCls+'">'+statusTxt+'</div>'
     +minHtml+'</div>'
-    +'<div class="dr-club">'+drCrestHtml(m.away)+'<div class="dr-cname">'+m.away.name+'</div></div>'
+    +'<div class="dr-club">'+drCrestHtml(m.away)+'<div class="dr-cname">'+m.away.name+'</div>'
+    +'<button class="dr-fav-btn" data-t="'+m.away.name+'" style="background:transparent;border:1px solid var(--border);border-radius:100px;padding:3px 14px;font-size:var(--fsmall);color:'+(isFavAway?'#f59e0b':'var(--grey)')+';cursor:pointer;margin-top:6px;font-family:var(--f-body);font-weight:700;">'+(isFavAway?'★ Favorito':'☆ Favoritar')+'</button></div>'
     +'</div></div>'
     +'<div class="dr-info-block">'
     +'<div class="dr-info-title">Informações</div>'
@@ -1361,6 +1658,20 @@ function openDrawer(m){
   overlayEl.classList.add('open');
   drawerEl.scrollTop=0;
   drawerOpen=true;
+  /* Bind fav buttons */
+  var fbBtns=drawerEl.querySelectorAll('.dr-fav-btn');
+  for(var fb=0;fb<fbBtns.length;fb++){
+    fbBtns[fb].addEventListener('click',(function(btn,match){return function(){
+      saveFav(btn.getAttribute('data-t'));
+      /* Re-render fav buttons sem fechar drawer */
+      var allFb=drawerEl.querySelectorAll('.dr-fav-btn');
+      for(var j=0;j<allFb.length;j++){
+        var isFav=favTeam===allFb[j].getAttribute('data-t');
+        allFb[j].style.color=isFav?'#f59e0b':'var(--grey)';
+        allFb[j].textContent=isFav?'★ Favorito':'☆ Favoritar';
+      }
+    };})(fbBtns[fb],m));
+  }
 }
 
 function closeDrawer(){
@@ -1571,6 +1882,40 @@ if(typeof tizen!=='undefined'){
   try{tizen.tvinputdevice.registerKey('Back');tizen.tvinputdevice.registerKey('XF86Back');}catch(ex){}
 }
 
+/* ── POLÍTICA DE PRIVACIDADE — overlay ───────────────────── */
+(function(){
+  var overlay = document.getElementById('privacy-overlay');
+  var box     = document.getElementById('privacy-box');
+  var btnClose= document.getElementById('privacy-close');
+  var linkPv  = document.getElementById('link-privacy');
+
+  function openPrivacy(){
+    overlay.classList.add('open');
+    box.scrollTop = 0;
+    btnClose.focus();
+  }
+  function closePrivacy(){
+    overlay.classList.remove('open');
+    /* devolve foco ao link do footer */
+    if(linkPv) linkPv.focus();
+  }
+
+  if(linkPv)   linkPv.addEventListener('click', function(e){ e.preventDefault(); openPrivacy(); });
+  if(btnClose) btnClose.addEventListener('click', closePrivacy);
+
+  /* Fechar com Back/Escape quando o overlay estiver aberto */
+  document.addEventListener('keydown', function(e){
+    if(!overlay.classList.contains('open')) return;
+    if(e.keyCode===27||e.keyCode===8||e.keyCode===10009){ e.preventDefault(); closePrivacy(); }
+    /* scroll com ↑↓ */
+    if(e.keyCode===40){ e.preventDefault(); box.scrollTop+=120; }
+    if(e.keyCode===38){ e.preventDefault(); box.scrollTop-=120; }
+  }, true); /* capture=true para interceptar antes do handler principal */
+
+  /* Fechar clicando fora da caixa */
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) closePrivacy(); });
+})();
+
 /* ── BOOT ─────────────────────────────────────────────────── */
 rebuildZones();detectCols();
 
@@ -1591,7 +1936,17 @@ rebuildZones();detectCols();
   var grid=document.getElementById('matches-grid');
   var observer=new MutationObserver(function(){
     var cards=grid.querySelectorAll('.match-card');
-    for(var i=0;i<cards.length;i++) cards[i].style.animationDelay=(i*0.05)+'s';
+    for(var i=0;i<cards.length;i++){
+      cards[i].style.opacity='0';
+      cards[i].style.transform='translateY(28px) scale(.95)';
+      (function(card,delay){
+        setTimeout(function(){
+          card.style.transition='opacity .45s ease, transform .48s cubic-bezier(.22,1,.36,1)';
+          card.style.opacity='1';
+          card.style.transform='translateY(0) scale(1)';
+        }, 50 + delay*65);
+      })(cards[i],i);
+    }
   });
   if(grid) observer.observe(grid,{childList:true});
 })();
