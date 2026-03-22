@@ -3,956 +3,738 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=1920"/>
-<meta name="description" content="Arena News — Premium Sports Portal for Smart TV"/>
-<meta name="application-name" content="Arena News"/>
-<title>Arena News</title>
+<meta name="application-name" content="Arena Sports"/>
+<meta name="description" content="Arena Sports — Live scores and match center for Smart TV"/>
+<title>Arena Sports</title>
 <style>
 /* ═══════════════════════════════════════════════════════════════
    RESET & ROOT
 ═══════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  /* palette — matches reference dark UI */
-  --bg:        #0f1117;
-  --bg2:       #161a24;
-  --bg3:       #1e2333;
-  --blue:      #3b6ef5;
-  --blue-glow: rgba(59,110,245,0.7);
-  --blue-dim:  rgba(59,110,245,0.18);
-  --neon:      #3b82f6;
-  --neon-glow: rgba(59,130,246,0.75);
-  --red:       #e53935;
-  --green:     #22c55e;
-  --gold:      #f59e0b;
-  --txt:       #f0f2f8;
-  --txt2:      #8b91a8;
-  --txt3:      #555d78;
-  --border:    rgba(255,255,255,0.07);
-  --radius:    12px;
-  --tr:        0.17s ease;
-  /* TV font sizes */
-  --fhdr:  28px;
-  --fnav:  24px;
-  --fhero: 38px;
-  --fcard: 22px;
-  --fbody: 19px;
-  --fmeta: 16px;
-  --fsmall:14px;
+  --bg:        #080b12;
+  --bg2:       #0f1420;
+  --bg3:       #161d2e;
+  --bg4:       #1d2540;
+  --blue:      #2563eb;
+  --blue-l:    #3b82f6;
+  --blue-glow: rgba(59,130,246,0.7);
+  --blue-dim:  rgba(37,99,235,0.18);
+  --green:     #16a34a;
+  --green-l:   #22c55e;
+  --red:       #dc2626;
+  --red-l:     #ef4444;
+  --gold:      #d97706;
+  --gold-l:    #f59e0b;
+  --txt:       #f1f5f9;
+  --txt2:      #94a3b8;
+  --txt3:      #475569;
+  --border:    rgba(255,255,255,0.08);
+  --r:         14px;
+  --r-sm:      8px;
+  --tr:        0.16s ease;
+  /* TV sizes */
+  --flogo:  36px;
+  --fnav:   22px;
+  --fsec:   26px;
+  --fcard:  20px;
+  --fbody:  18px;
+  --fmeta:  15px;
+  --fsmall: 13px;
+  --fhero:  44px;
+  --fscore: 64px;
 }
-
 html{font-size:16px}
 body{
   width:1920px;min-height:1080px;margin:0 auto;
   background:var(--bg);color:var(--txt);
   font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  overflow:hidden;
+  -webkit-font-smoothing:antialiased;overflow:hidden;
 }
-#app{
-  width:1920px;height:1080px;
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
+#app{width:1920px;height:1080px;display:flex;flex-direction:column;overflow:hidden;position:relative;}
 
 /* ═══════════════════════════════════════════════════════════════
    FOCUS SYSTEM
 ═══════════════════════════════════════════════════════════════ */
-.focusable{outline:none;transition:transform var(--tr),border-color var(--tr),box-shadow var(--tr);}
+.focusable{outline:none;transition:transform var(--tr),border-color var(--tr),box-shadow var(--tr),background var(--tr);}
 .focusable.focused{
-  transform:scale(1.06);
-  border-color:var(--neon) !important;
-  box-shadow:0 0 0 3px var(--neon-glow),0 0 32px rgba(59,130,246,0.35);
-  z-index:50;position:relative;
+  border-color:var(--blue-l) !important;
+  box-shadow:0 0 0 3px var(--blue-glow),0 0 28px rgba(59,130,246,0.3) !important;
+  z-index:20;position:relative;
 }
-/* nav items get special focus */
-.nav-item.focused{
-  background:var(--blue) !important;
-  color:#fff !important;
-  transform:none;
-  box-shadow:0 0 18px var(--blue-glow);
-}
-.sidebar-item.focused{
-  background:var(--blue-dim) !important;
-  color:#fff !important;
-  transform:none;
-  border-left:3px solid var(--neon) !important;
-  box-shadow:none;
-}
+.card-focus.focused{transform:scale(1.04);}
+.nav-focus.focused{background:var(--blue) !important;color:#fff !important;transform:none;}
+.pill-focus.focused{transform:none;}
 
 /* ═══════════════════════════════════════════════════════════════
    HEADER
 ═══════════════════════════════════════════════════════════════ */
 header{
-  flex-shrink:0;
-  width:100%;height:80px;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
-  padding:0 40px;gap:0;
+  flex-shrink:0;height:84px;width:100%;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 56px;gap:48px;
 }
-
-/* Logo badge */
-.logo{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-right:40px;}
-.logo-badge{
-  width:44px;height:44px;border-radius:10px;
-  background:var(--blue);
+.logo{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.logo-mark{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),#7c3aed);
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:900;letter-spacing:-1px;color:#fff;
+  font-size:20px;font-weight:900;color:#fff;letter-spacing:-1px;
 }
-.logo-name{font-size:var(--fhdr);font-weight:800;color:var(--txt);letter-spacing:.5px;}
-.logo-name span{color:var(--blue);}
+.logo-text{font-size:var(--flogo);font-weight:900;color:var(--txt);letter-spacing:.5px;}
+.logo-text em{color:var(--blue-l);font-style:normal;}
 
-/* Nav */
 nav{display:flex;align-items:center;gap:6px;flex:1;}
-.nav-item{
-  padding:10px 26px;border-radius:100px;
+.nav-btn{
+  padding:10px 24px;border-radius:100px;
   border:2px solid transparent;background:transparent;
   color:var(--txt2);font-size:var(--fnav);font-weight:600;
-  cursor:pointer;white-space:nowrap;
-  transition:all var(--tr);outline:none;
+  cursor:pointer;white-space:nowrap;transition:all var(--tr);outline:none;
 }
-.nav-item.active{background:var(--blue);color:#fff;}
-.nav-item:hover:not(.active){color:var(--txt);background:var(--bg3);}
+.nav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.nav-btn:hover:not(.active){background:var(--bg3);color:var(--txt);}
 
-/* Header right */
-.hdr-right{display:flex;align-items:center;gap:16px;flex-shrink:0;margin-left:auto;}
-.hdr-btn{
-  width:48px;height:48px;border-radius:12px;
-  background:var(--bg3);border:2px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--txt2);font-size:20px;
-  transition:all var(--tr);outline:none;
-}
-.avatar{
-  width:48px;height:48px;border-radius:50%;
-  background:linear-gradient(135deg,var(--blue),#8b5cf6);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:700;color:#fff;cursor:pointer;
-  border:2px solid var(--border);outline:none;
-}
-.hdr-user{display:flex;align-items:center;gap:10px;}
-.hdr-uname{font-size:var(--fmeta);color:var(--txt);font-weight:600;}
-.hdr-usub{font-size:12px;color:var(--txt2);}
-
-/* Clock */
-.hdr-clock{text-align:right;flex-shrink:0;margin-left:24px;}
-#clock{font-size:28px;font-weight:700;letter-spacing:2px;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:20px;flex-shrink:0;}
+#clock-wrap{text-align:right;}
+#clock{font-size:30px;font-weight:700;letter-spacing:2px;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums;}
 #cdate{font-size:var(--fsmall);color:var(--txt2);margin-top:3px;}
 
 /* ═══════════════════════════════════════════════════════════════
-   BODY LAYOUT: sidebar + content + right-panel
+   SCROLLABLE MAIN
 ═══════════════════════════════════════════════════════════════ */
-.body-wrap{
-  flex:1;display:flex;overflow:hidden;
+#main{
+  flex:1;overflow-y:scroll;overflow-x:hidden;
+  padding:36px 56px 56px;background:var(--bg);
 }
+#main::-webkit-scrollbar{width:4px;}
+#main::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
 
-/* ── LEFT SIDEBAR ────────────────────────────────────────────── */
-.sidebar{
-  width:260px;flex-shrink:0;
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  overflow-y:auto;padding:24px 0 24px;
-}
-.sidebar::-webkit-scrollbar{width:0;}
+/* ═══════════════════════════════════════════════════════════════
+   SECTION HEADERS
+═══════════════════════════════════════════════════════════════ */
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
+.sec-title{font-size:var(--fsec);font-weight:800;color:var(--txt);}
+.sec-line{flex:1;height:2px;background:linear-gradient(90deg,var(--blue),transparent);border-radius:1px;}
+.sec-badge{font-size:var(--fmeta);color:var(--txt2);}
+.live-indicator{display:flex;align-items:center;gap:7px;font-size:var(--fmeta);font-weight:700;color:var(--red-l);letter-spacing:1.5px;text-transform:uppercase;}
+.li-dot{width:9px;height:9px;background:var(--red-l);border-radius:50%;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.6)}}
 
-.sb-section{margin-bottom:28px;}
-.sb-title{
-  font-size:var(--fmeta);font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;color:var(--txt3);
-  padding:0 24px 12px;
+/* ═══════════════════════════════════════════════════════════════
+   MATCH CARDS GRID
+═══════════════════════════════════════════════════════════════ */
+.matches-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:20px;margin-bottom:48px;
 }
-.sidebar-item{
+.match-card{
+  background:var(--bg2);border-radius:var(--r);
+  border:2px solid var(--border);
+  cursor:pointer;outline:none;overflow:hidden;
+  transition:transform var(--tr),border-color var(--tr),box-shadow var(--tr);
+  position:relative;
+}
+.match-card.focused{
+  transform:scale(1.04);
+  border-color:var(--blue-l);
+  box-shadow:0 0 0 3px var(--blue-glow),0 12px 40px rgba(0,0,0,0.5);
+}
+.match-card:hover:not(.focused){border-color:rgba(59,130,246,.35);transform:scale(1.015);}
+
+/* Card top stripe */
+.mc-stripe{
+  height:4px;width:100%;
+}
+.stripe-live{background:linear-gradient(90deg,var(--red),var(--red-l));}
+.stripe-ft{background:linear-gradient(90deg,var(--txt3),var(--txt3));}
+.stripe-soon{background:linear-gradient(90deg,var(--gold),var(--gold-l));}
+
+/* Card header row */
+.mc-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding:11px 24px;cursor:pointer;
-  border-left:3px solid transparent;
-  transition:all var(--tr);outline:none;
-  color:var(--txt2);font-size:var(--fbody);font-weight:500;
+  padding:12px 16px 8px;
 }
-.sidebar-item:hover{background:var(--bg3);color:var(--txt);}
-.sidebar-item.active{border-left-color:var(--blue);color:var(--txt);background:var(--blue-dim);}
-.sb-left{display:flex;align-items:center;gap:12px;}
-.sb-icon{
-  width:32px;height:32px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;background:var(--bg3);flex-shrink:0;
+.mc-league{font-size:var(--fsmall);font-weight:700;color:var(--txt2);letter-spacing:.5px;}
+.mc-status{
+  font-size:var(--fsmall);font-weight:800;letter-spacing:1.5px;
+  padding:3px 10px;border-radius:100px;
+  text-transform:uppercase;
 }
-.sb-count{
-  font-size:12px;color:var(--txt3);background:var(--bg3);
-  padding:2px 8px;border-radius:100px;font-weight:600;
-}
+.status-live{background:rgba(220,38,38,.18);color:var(--red-l);display:flex;align-items:center;gap:5px;}
+.status-live .dot{width:6px;height:6px;background:var(--red-l);border-radius:50%;animation:blink .9s infinite;}
+.status-ft{background:rgba(71,85,105,.25);color:var(--txt2);}
+.status-soon{background:rgba(217,119,6,.18);color:var(--gold-l);}
 
-/* ── MAIN CONTENT ────────────────────────────────────────────── */
-.content{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:28px 32px;background:var(--bg);
+/* Teams + score */
+.mc-body{padding:8px 16px 16px;}
+.mc-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mc-team{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;}
+.mc-crest{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--bg3);display:flex;align-items:center;
+  justify-content:center;font-size:30px;
+  border:2px solid var(--border);flex-shrink:0;
 }
-.content::-webkit-scrollbar{width:4px;}
-.content::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
-
-/* Hero Banner */
-.hero-banner{
-  position:relative;width:100%;height:320px;
-  border-radius:18px;overflow:hidden;
-  margin-bottom:32px;cursor:pointer;
-  border:2px solid transparent;
-  transition:all var(--tr);outline:none;
-  flex-shrink:0;
-}
-.hero-banner.focused{
-  border-color:var(--neon);
-  box-shadow:0 0 0 4px var(--neon-glow),0 12px 48px rgba(0,0,0,0.5);
-  transform:scale(1.01);
-}
-.hero-img{width:100%;height:100%;object-fit:cover;display:block;}
-.hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(10,14,30,0.92) 0%,rgba(10,14,30,0.6) 50%,transparent 100%);
-}
-.hero-content{
-  position:absolute;top:0;left:0;bottom:0;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:36px 48px;max-width:680px;
-}
-.hero-league{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--blue);border-radius:100px;
-  padding:5px 16px;font-size:var(--fmeta);font-weight:700;
-  color:#fff;letter-spacing:.5px;margin-bottom:14px;width:fit-content;
-}
-.hero-title{
-  font-size:var(--fhero);font-weight:900;color:#fff;
-  line-height:1.2;margin-bottom:10px;
-  text-shadow:0 2px 12px rgba(0,0,0,0.6);
-}
-.hero-desc{
-  font-size:var(--fbody);color:rgba(255,255,255,0.72);
-  line-height:1.5;margin-bottom:22px;
+.mc-tname{
+  font-size:var(--fbody);font-weight:700;color:var(--txt);
+  text-align:center;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
-.hero-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--blue);color:#fff;
-  padding:13px 32px;border-radius:100px;
-  font-size:var(--fbody);font-weight:700;
-  border:none;cursor:pointer;width:fit-content;
-  transition:all var(--tr);outline:none;
+.mc-score-col{
+  display:flex;flex-direction:column;align-items:center;
+  gap:4px;flex-shrink:0;padding:0 8px;
 }
-.hero-btn:hover{background:#2d5fd4;}
-.hero-badge{
-  position:absolute;top:24px;right:24px;
-  background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);
-  border-radius:12px;padding:10px 16px;
-  display:flex;align-items:center;gap:10px;
-  font-size:var(--fmeta);color:rgba(255,255,255,0.8);
+.mc-score{
+  font-size:42px;font-weight:900;color:var(--txt);
+  letter-spacing:4px;line-height:1;
+  font-variant-numeric:tabular-nums;
 }
-.hero-badge-live{
-  display:flex;align-items:center;gap:6px;
-  color:var(--red);font-weight:700;font-size:var(--fmeta);letter-spacing:1px;
-}
-.hb-dot{width:8px;height:8px;background:var(--red);border-radius:50%;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.5)}}
+.mc-score.score-live{color:var(--red-l);}
+.mc-score.score-soon{font-size:22px;color:var(--gold-l);letter-spacing:1px;}
+.mc-min{font-size:var(--fsmall);color:var(--txt2);font-weight:600;}
 
-/* Matches section header */
-.sec-head{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:18px;
+/* Card footer */
+.mc-foot{
+  border-top:1px solid var(--border);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:8px;
 }
-.sec-title-wrap{display:flex;align-items:center;gap:12px;}
-.sec-title{font-size:var(--fcard);font-weight:800;color:var(--txt);}
-.sec-tabs{display:flex;gap:6px;}
-.sec-tab{
-  padding:7px 18px;border-radius:100px;
-  border:1.5px solid var(--border);background:transparent;
-  color:var(--txt2);font-size:var(--fmeta);font-weight:600;
-  cursor:pointer;outline:none;transition:all var(--tr);
-}
-.sec-tab.active{background:var(--blue);border-color:var(--blue);color:#fff;}
-.sec-tab.focused{border-color:var(--neon);color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);transform:none;}
-.sec-date{font-size:var(--fmeta);color:var(--txt3);}
+.mc-venue{font-size:var(--fsmall);color:var(--txt3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-arrow{margin-left:auto;color:var(--blue-l);font-size:var(--fmeta);font-weight:700;flex-shrink:0;}
 
-/* Matches grid (league groups) */
-.league-group{margin-bottom:20px;}
-.league-header{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg2);border-radius:10px;padding:12px 20px;
-  margin-bottom:2px;cursor:pointer;outline:none;
-  border:1.5px solid var(--border);transition:all var(--tr);
-}
-.league-header.focused{border-color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);transform:none;}
-.lh-left{display:flex;align-items:center;gap:12px;}
-.league-flag{font-size:22px;}
-.league-name{font-size:var(--fbody);font-weight:700;color:var(--txt);}
-.league-sub{font-size:var(--fsmall);color:var(--txt2);}
-.lh-count{
-  font-size:var(--fsmall);font-weight:700;
-  background:var(--blue-dim);color:var(--blue);
-  padding:3px 10px;border-radius:100px;
-}
-
-/* Match row */
-.match-row{
-  display:grid;
-  grid-template-columns:160px 1fr auto auto auto 120px;
-  align-items:center;gap:16px;
-  background:var(--bg2);border-radius:0;padding:14px 20px;
-  border-top:1px solid var(--border);cursor:pointer;
-  transition:all var(--tr);outline:none;
-  border:1.5px solid transparent;
-}
-.match-row:first-of-type{border-radius:0 0 0 0;}
-.match-row:last-of-type{border-radius:0 0 10px 10px;}
-.match-row.focused{
-  background:var(--bg3);border-color:var(--neon);
-  box-shadow:0 0 0 2px var(--neon-glow);transform:none;z-index:5;
-}
-.match-time-col{text-align:center;}
-.match-time{font-size:var(--fmeta);color:var(--txt2);font-weight:600;}
-.match-live-label{
-  font-size:12px;font-weight:800;color:var(--red);
-  letter-spacing:1px;margin-top:2px;
-}
-.teams-col{display:flex;flex-direction:column;gap:6px;}
-.team-line{display:flex;align-items:center;gap:10px;}
-.team-crest{
-  width:26px;height:26px;border-radius:50%;
-  background:var(--bg3);display:flex;align-items:center;
-  justify-content:center;font-size:14px;flex-shrink:0;
-}
-.team-lname{font-size:var(--fbody);font-weight:600;color:var(--txt);}
-.odds-col{display:flex;gap:8px;}
-.odd-pill{
-  padding:6px 14px;border-radius:8px;
-  background:var(--bg3);border:1.5px solid var(--border);
-  font-size:var(--fmeta);font-weight:700;color:var(--txt2);
-  cursor:pointer;outline:none;transition:all var(--tr);
-  min-width:54px;text-align:center;
-}
-.odd-pill.focused{border-color:var(--neon);color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);transform:none;}
-.odd-pill:hover{background:var(--blue-dim);color:var(--txt);}
-.odd-pill.top{background:var(--blue-dim);color:var(--blue);}
-.match-btn{
-  padding:8px 18px;border-radius:8px;
-  background:var(--blue);color:#fff;
-  font-size:var(--fsmall);font-weight:700;
-  border:none;cursor:pointer;outline:none;
-  transition:all var(--tr);white-space:nowrap;
-}
-.match-btn.focused{border:2px solid var(--neon);box-shadow:0 0 0 2px var(--neon-glow);transform:none;}
-.match-more{color:var(--txt3);font-size:var(--fmeta);font-weight:600;white-space:nowrap;}
-
-/* News grid at bottom */
-.news-section{margin-top:32px;}
-.news-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-}
+/* ═══════════════════════════════════════════════════════════════
+   NEWS CARDS
+═══════════════════════════════════════════════════════════════ */
+.news-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:48px;}
 .news-card{
-  background:var(--bg2);border-radius:var(--radius);
-  border:2px solid transparent;overflow:hidden;
-  cursor:pointer;outline:none;
-  transition:transform var(--tr),border-color var(--tr),box-shadow var(--tr);
+  background:var(--bg2);border-radius:var(--r);
+  border:2px solid var(--border);overflow:hidden;
 }
-.news-card.focused{
-  border-color:var(--neon);
-  box-shadow:0 0 0 3px var(--neon-glow),0 8px 32px rgba(0,0,0,0.5);
-  transform:scale(1.04);
-}
-.news-card:hover:not(.focused){border-color:rgba(59,110,245,.4);transform:scale(1.02);}
-.nc-img{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg3);}
-.nc-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease;}
-.news-card.focused .nc-img img,.news-card:hover .nc-img img{transform:scale(1.07);}
-.nc-img::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.5));
-  pointer-events:none;
-}
+.nc-img{position:relative;width:100%;aspect-ratio:16/9;background:var(--bg3);overflow:hidden;}
+.nc-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.nc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.55));pointer-events:none;}
 .nc-cat{
   position:absolute;top:10px;left:10px;z-index:2;
   padding:4px 12px;border-radius:100px;
-  font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font-size:var(--fsmall);font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  backdrop-filter:blur(10px);
 }
-.nc-live{
-  position:absolute;top:10px;right:10px;z-index:2;
-  display:flex;align-items:center;gap:5px;
-  padding:4px 10px;background:var(--red);border-radius:6px;
-  font-size:12px;font-weight:800;letter-spacing:1.5px;color:#fff;
-}
-.nc-live .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1s infinite;}
-.cat-football {background:rgba(59,110,245,.85);color:#fff;}
-.cat-basketball{background:rgba(234,88,12,.85);color:#fff;}
-.cat-tennis   {background:rgba(22,163,74,.85);color:#fff;}
-.cat-f1       {background:rgba(185,28,28,.85);color:#fff;}
+.ncat-football {background:rgba(37,99,235,.85);color:#fff;}
+.ncat-basketball{background:rgba(234,88,12,.85);color:#fff;}
+.ncat-local    {background:rgba(22,163,74,.85);color:#fff;}
 .nc-body{padding:14px 16px 18px;}
-.nc-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.nc-src{font-size:var(--fmeta);font-weight:700;color:#4a9fff;}
-.nc-dot{color:var(--txt3);font-size:11px;}
-.nc-time{font-size:var(--fmeta);color:var(--txt2);}
-.nc-title{
-  font-size:var(--fcard);font-weight:800;line-height:1.25;color:var(--txt);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
+.nc-src{font-size:var(--fmeta);font-weight:700;color:var(--blue-l);margin-bottom:6px;}
+.nc-title{font-size:var(--fcard);font-weight:800;line-height:1.3;color:var(--txt);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 
-/* ── RIGHT PANEL ─────────────────────────────────────────────── */
-.right-panel{
-  width:320px;flex-shrink:0;
-  background:var(--bg2);border-left:1px solid var(--border);
-  overflow-y:auto;padding:24px 20px;
-  display:flex;flex-direction:column;gap:24px;
-}
-.right-panel::-webkit-scrollbar{width:0;}
-
-.rp-section-title{
-  font-size:var(--fbody);font-weight:800;color:var(--txt);
-  margin-bottom:14px;letter-spacing:.3px;
-}
-.rp-sub{font-size:var(--fsmall);color:var(--txt2);margin-bottom:14px;}
-
-/* Live match card in right panel */
-.live-match-card{
-  background:var(--bg3);border-radius:var(--radius);
-  padding:18px 16px;border:1.5px solid var(--border);
-  cursor:pointer;outline:none;transition:all var(--tr);
-}
-.live-match-card.focused{border-color:var(--neon);box-shadow:0 0 0 3px var(--neon-glow);transform:scale(1.02);}
-.lmc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.lmc-badge{
-  display:flex;align-items:center;gap:6px;
-  background:rgba(229,57,53,.15);color:var(--red);
-  padding:4px 10px;border-radius:100px;
-  font-size:12px;font-weight:800;letter-spacing:1px;
-}
-.lmc-dot{width:6px;height:6px;background:var(--red);border-radius:50%;animation:pulse 1s infinite;}
-.lmc-matchday{font-size:12px;color:var(--txt2);}
-.lmc-score-row{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;margin-bottom:16px;
-}
-.lmc-club{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  flex:1;
-}
-.lmc-crest{
-  width:52px;height:52px;border-radius:12px;
-  background:var(--bg2);display:flex;align-items:center;
-  justify-content:center;font-size:28px;
-}
-.lmc-cname{font-size:var(--fmeta);font-weight:600;color:var(--txt);text-align:center;}
-.lmc-score-box{text-align:center;flex-shrink:0;}
-.lmc-score{font-size:52px;font-weight:900;color:var(--txt);letter-spacing:4px;line-height:1;}
-.lmc-sep{font-size:16px;color:var(--txt3);}
-.lmc-odds-row{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:6px;margin-top:10px;
-}
-.lmc-odd{
-  text-align:center;background:var(--bg2);border-radius:8px;
-  padding:7px 4px;border:1.5px solid var(--border);
-  font-size:var(--fmeta);color:var(--txt2);font-weight:600;
-  cursor:pointer;outline:none;transition:all var(--tr);
-}
-.lmc-odd.focused{border-color:var(--neon);color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);}
-.lmc-odd-lbl{font-size:11px;color:var(--txt3);display:block;margin-bottom:2px;}
-.lmc-detail{
-  width:100%;margin-top:12px;
-  padding:10px;border-radius:8px;
-  background:var(--bg);border:1.5px solid var(--border);
-  color:var(--txt2);font-size:var(--fmeta);font-weight:600;
-  cursor:pointer;outline:none;transition:all var(--tr);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.lmc-detail.focused{border-color:var(--neon);color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);}
-
-/* Bet slip */
-.betslip-card{
-  background:var(--bg3);border-radius:var(--radius);
-  padding:18px 16px;border:1.5px solid var(--border);
-}
-.bs-type-row{display:flex;gap:6px;margin-bottom:14px;}
-.bs-type{
-  padding:6px 16px;border-radius:100px;border:1.5px solid var(--border);
-  background:transparent;color:var(--txt2);font-size:var(--fmeta);font-weight:600;
-  cursor:pointer;outline:none;transition:all var(--tr);
-}
-.bs-type.active{background:var(--blue);border-color:var(--blue);color:#fff;}
-.bs-type.focused{border-color:var(--neon);color:var(--neon);box-shadow:0 0 0 2px var(--neon-glow);}
-.bs-item{
-  background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:10px;
-  border:1.5px solid var(--border);
-}
-.bs-match{font-size:var(--fsmall);color:var(--txt2);margin-bottom:4px;}
-.bs-pick{font-size:var(--fbody);font-weight:700;color:var(--txt);}
-.bs-odd-val{
-  float:right;font-size:var(--fcard);font-weight:900;
-  color:var(--blue);margin-top:-4px;
-}
-.bs-stake-row{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:10px;
-}
-.bs-stake-lbl{font-size:var(--fmeta);color:var(--txt2);}
-.bs-stake-val{
-  font-size:var(--fbody);font-weight:700;color:var(--txt);
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:8px;padding:6px 14px;outline:none;
-}
-.bs-info-row{display:flex;justify-content:space-between;margin-bottom:12px;}
-.bs-info-lbl{font-size:var(--fsmall);color:var(--txt2);}
-.bs-info-val{font-size:var(--fsmall);font-weight:700;color:var(--txt);}
-.bs-btn{
-  width:100%;padding:13px;border-radius:10px;
-  background:var(--blue);color:#fff;
-  font-size:var(--fbody);font-weight:800;
-  border:none;cursor:pointer;outline:none;
-  transition:all var(--tr);
-}
-.bs-btn.focused{box-shadow:0 0 0 3px var(--neon-glow);border:2px solid var(--neon);transform:none;}
-
-/* ── FOOTER ──────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════ */
 footer{
-  flex-shrink:0;
-  background:var(--bg2);border-top:1px solid var(--border);
-  padding:14px 40px;
+  flex-shrink:0;background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:14px 56px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.foot-left{font-size:var(--fsmall);color:var(--txt3);}
-.foot-links{display:flex;gap:28px;}
+.foot-copy{font-size:var(--fsmall);color:var(--txt3);}
+.foot-links{display:flex;gap:24px;}
 .foot-links a{
   font-size:var(--fsmall);font-weight:600;color:var(--txt2);
-  text-decoration:none;padding:4px 0;
-  border-bottom:2px solid transparent;
-  transition:all var(--tr);outline:none;
+  text-decoration:none;border-bottom:2px solid transparent;
+  transition:all var(--tr);outline:none;padding:2px 0;
 }
-.foot-links a[href="privacy.html"]{color:#4a9fff;}
-.foot-links a.focused,.foot-links a:focus{color:var(--neon);border-bottom-color:var(--neon);outline:none;}
-.foot-links a:hover:not(.focused){color:var(--txt);}
+.foot-links a[href="privacy.html"]{color:var(--blue-l);}
+.foot-links a.focused,.foot-links a:focus{color:var(--blue-l);border-bottom-color:var(--blue-l);outline:none;}
 .foot-ver{font-size:12px;color:var(--txt3);font-family:monospace;letter-spacing:1px;}
 
 /* ═══════════════════════════════════════════════════════════════
-   RESPONSIVE SCALE
+   DETAIL DRAWER
+═══════════════════════════════════════════════════════════════ */
+#drawer-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background .3s ease;
+}
+#drawer-overlay.open{background:rgba(0,0,0,.55);pointer-events:auto;}
+
+#drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:540px;z-index:501;
+  background:#0b0f1a;
+  border-left:1px solid var(--border);
+  transform:translateX(100%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;overflow-x:hidden;
+  padding:0;
+}
+#drawer::-webkit-scrollbar{width:3px;}
+#drawer::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
+#drawer.open{transform:translateX(0);}
+
+/* Drawer header */
+.dr-header{
+  padding:28px 32px 20px;
+  border-bottom:1px solid var(--border);
+  background:#0f1520;
+  position:sticky;top:0;z-index:10;
+}
+.dr-back{
+  display:flex;align-items:center;gap:8px;
+  font-size:var(--fmeta);color:var(--txt2);margin-bottom:16px;
+  cursor:pointer;
+}
+.dr-competition{
+  font-size:var(--fsmall);font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--blue-l);margin-bottom:4px;
+}
+.dr-phase{font-size:var(--fmeta);color:var(--txt2);margin-bottom:2px;}
+.dr-venue{font-size:var(--fmeta);color:var(--txt3);}
+
+/* Drawer score block */
+.dr-score-block{
+  padding:28px 32px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:16px;
+  background:linear-gradient(180deg,#0f1520,var(--bg));
+  border-bottom:1px solid var(--border);
+}
+.dr-teams-row{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;gap:12px;
+}
+.dr-club{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;}
+.dr-crest{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--bg3);display:flex;align-items:center;
+  justify-content:center;font-size:40px;
+  border:2px solid var(--border);
+}
+.dr-cname{
+  font-size:var(--fcard);font-weight:800;color:var(--txt);
+  text-align:center;
+}
+.dr-score-center{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.dr-score{
+  font-size:var(--fscore);font-weight:900;
+  letter-spacing:6px;color:var(--txt);
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.dr-score.live{color:var(--red-l);}
+.dr-score.soon{font-size:28px;color:var(--gold-l);letter-spacing:2px;}
+.dr-status-badge{
+  font-size:var(--fsmall);font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;padding:4px 14px;border-radius:100px;
+}
+.dsb-live{background:rgba(220,38,38,.2);color:var(--red-l);}
+.dsb-ft{background:rgba(71,85,105,.3);color:var(--txt2);}
+.dsb-soon{background:rgba(217,119,6,.2);color:var(--gold-l);}
+.dr-min{font-size:var(--fmeta);color:var(--red-l);font-weight:700;}
+
+/* Drawer info rows */
+.dr-info-block{padding:20px 32px;border-bottom:1px solid var(--border);}
+.dr-info-title{font-size:var(--fmeta);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:12px;}
+.dr-info-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.dr-info-row:last-child{border-bottom:none;}
+.dr-il{font-size:var(--fmeta);color:var(--txt2);}
+.dr-iv{font-size:var(--fmeta);font-weight:600;color:var(--txt);text-align:right;}
+
+/* Lineups */
+.dr-lineup-block{padding:20px 32px;}
+.dr-lu-title{font-size:var(--fmeta);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:16px;}
+.dr-lu-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.dr-lu-team{}
+.dr-lu-tname{font-size:var(--fbody);font-weight:800;color:var(--blue-l);margin-bottom:10px;}
+.dr-player{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.dr-pnum{font-size:var(--fmeta);font-weight:700;color:var(--txt3);width:24px;text-align:center;flex-shrink:0;}
+.dr-pname{font-size:var(--fbody);color:var(--txt);}
+.dr-ppos{font-size:var(--fsmall);color:var(--txt3);margin-left:auto;}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE 720p
 ═══════════════════════════════════════════════════════════════ */
 @media(max-width:1280px){
-  body{width:1280px;}
-  #app{height:720px;}
-  :root{--fhdr:22px;--fnav:18px;--fhero:28px;--fcard:18px;--fbody:15px;--fmeta:13px;}
-  .sidebar{width:200px;}
-  .right-panel{width:260px;}
-  .hero-banner{height:240px;}
-  .news-grid{grid-template-columns:repeat(3,1fr);}
+  body{width:1280px;}#app{height:720px;}
+  :root{--flogo:26px;--fnav:17px;--fsec:20px;--fcard:16px;--fbody:14px;--fmeta:12px;--fsmall:11px;--fscore:44px;}
+  header{height:64px;padding:0 36px;}
+  #main{padding:24px 36px 40px;}
+  footer{padding:10px 36px;}
+  .matches-grid,.news-grid{grid-template-columns:repeat(3,1fr);}
+  #drawer{width:420px;}
 }
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ══ HEADER ════════════════════════════════════════════════ -->
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
 <header>
   <div class="logo">
-    <div class="logo-badge">AN</div>
-    <div class="logo-name">BetLive <span>Sports</span></div>
+    <div class="logo-mark">AS</div>
+    <div class="logo-text">Arena<em>Sports</em></div>
   </div>
-
-  <nav role="navigation" aria-label="Sport categories">
-    <button class="nav-item active focusable" tabindex="0" data-cat="football"   role="menuitem">⚽ Football</button>
-    <button class="nav-item focusable"         tabindex="0" data-cat="basketball" role="menuitem">🏀 Basketball</button>
-    <button class="nav-item focusable"         tabindex="0" data-cat="tennis"     role="menuitem">🎾 Tennis</button>
-    <button class="nav-item focusable"         tabindex="0" data-cat="volleyball" role="menuitem">🏐 Volleyball</button>
+  <nav role="navigation" aria-label="League filter">
+    <button class="nav-btn active focusable nav-focus" tabindex="0" data-filter="all"     aria-label="All Games">All Games</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="ucl"     aria-label="Champions League">🏆 Champions</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="laliga"  aria-label="La Liga">🇪🇸 La Liga</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="epl"     aria-label="Premier League">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="nba"     aria-label="NBA">🏀 NBA</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="serie_a" aria-label="Serie A">🇮🇹 Serie A</button>
+    <button class="nav-btn focusable nav-focus"         tabindex="0" data-filter="bundesliga" aria-label="Bundesliga">🇩🇪 Bundesliga</button>
   </nav>
-
   <div class="hdr-right">
-    <div class="hdr-btn focusable" tabindex="0" role="button" aria-label="Search">🔍</div>
-    <div class="hdr-btn focusable" tabindex="0" role="button" aria-label="Notifications" style="position:relative;">
-      🔔
-      <span style="position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;"></span>
-    </div>
-    <div class="hdr-user">
-      <div class="avatar focusable" tabindex="0" role="button" aria-label="User profile">GC</div>
-      <div>
-        <div class="hdr-uname">George chichua</div>
-        <div class="hdr-usub">Premium Member</div>
-      </div>
-    </div>
-    <div class="hdr-clock">
-      <div id="clock">00:00</div>
+    <div id="clock-wrap">
+      <div id="clock">00:00:00</div>
       <div id="cdate">loading...</div>
     </div>
   </div>
 </header>
 
-<!-- ══ BODY ══════════════════════════════════════════════════ -->
-<div class="body-wrap">
+<!-- ══ MAIN ════════════════════════════════════════════════════ -->
+<div id="main" role="main">
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="sidebar" role="complementary" aria-label="Leagues and countries">
+  <!-- LIVE MATCHES -->
+  <div class="sec-head">
+    <h2 class="sec-title">Today's Matches</h2>
+    <div class="sec-line"></div>
+    <div class="live-indicator"><div class="li-dot"></div>Live Now</div>
+    <span class="sec-badge" id="match-count"></span>
+  </div>
+  <div class="matches-grid" id="matches-grid"></div>
 
-    <div class="sb-section">
-      <div class="sb-title">Popular Leagues</div>
-      <div class="sidebar-item active focusable" tabindex="0" role="button" aria-label="UEFA Champions League">
-        <div class="sb-left"><div class="sb-icon">🏆</div>UEFA Champions</div>
-        <div class="sb-count">38</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="European League">
-        <div class="sb-left"><div class="sb-icon">🥈</div>European League</div>
-        <div class="sb-count">41</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Premier League">
-        <div class="sb-left"><div class="sb-icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>Premier League</div>
-        <div class="sb-count">153</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="La Liga">
-        <div class="sb-left"><div class="sb-icon">🇪🇸</div>La Liga</div>
-        <div class="sb-count">156</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Serie A">
-        <div class="sb-left"><div class="sb-icon">🇮🇹</div>Serie A</div>
-        <div class="sb-count">146</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Bundesliga">
-        <div class="sb-left"><div class="sb-icon">🇩🇪</div>Bundesliga</div>
-        <div class="sb-count">159</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Liga 1">
-        <div class="sb-left"><div class="sb-icon">🏅</div>Liga 1</div>
-        <div class="sb-count">159</div>
-      </div>
-    </div>
+  <!-- NEWS -->
+  <div class="sec-head">
+    <h2 class="sec-title">Latest News</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="news-grid" id="news-grid"></div>
 
-    <div class="sb-section">
-      <div class="sb-title">Popular Countries</div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Germany">
-        <div class="sb-left"><div class="sb-icon">🇩🇪</div>Germany</div>
-        <div class="sb-count">220</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="France">
-        <div class="sb-left"><div class="sb-icon">🇫🇷</div>France</div>
-        <div class="sb-count">190</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Spain">
-        <div class="sb-left"><div class="sb-icon">🇪🇸</div>Spain</div>
-        <div class="sb-count">310</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="England">
-        <div class="sb-left"><div class="sb-icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>England</div>
-        <div class="sb-count">215</div>
-      </div>
-      <div class="sidebar-item focusable" tabindex="0" role="button" aria-label="Italy">
-        <div class="sb-left"><div class="sb-icon">🇮🇹</div>Italy</div>
-        <div class="sb-count">163</div>
-      </div>
-    </div>
+</div>
 
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="content" id="main-content" role="main">
-
-    <!-- HERO BANNER -->
-    <div class="hero-banner focusable" id="hero-banner" tabindex="0" role="button" aria-label="Featured match: Liverpool FC vs Manchester United">
-      <img class="hero-img"
-        src="https://images.unsplash.com/photo-1552667466-07770ae110d0?w=1200&q=80"
-        alt="Liverpool FC vs Manchester United"
-        loading="eager"/>
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-league">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</div>
-        <h1 class="hero-title">Liverpool FC vs<br/>Manchester United</h1>
-        <p class="hero-desc">Place a bet on this match today, get instant cashback and participate in various raffles. Don't miss the biggest game of the week!</p>
-        <button class="hero-btn focusable" tabindex="0">Read News →</button>
-      </div>
-      <div class="hero-badge">
-        <div class="hero-badge-live"><div class="hb-dot"></div>LIVE</div>
-        <span>Today, 08:30 PM</span>
-      </div>
-    </div>
-
-    <!-- MATCHES SECTION -->
-    <div class="sec-head">
-      <div class="sec-title-wrap">
-        <span class="sec-title">Football Matches</span>
-      </div>
-      <div class="sec-tabs">
-        <button class="sec-tab active focusable" tabindex="0">All games</button>
-        <button class="sec-tab focusable"         tabindex="0">Live matches</button>
-        <button class="sec-tab focusable"         tabindex="0">ODDS</button>
-        <button class="sec-tab focusable"         tabindex="0">Finished</button>
-      </div>
-      <div class="sec-date" id="match-date"></div>
-    </div>
-
-    <!-- PREMIER LEAGUE GROUP -->
-    <div class="league-group">
-      <div class="league-header focusable" tabindex="0" role="button" aria-label="Premier League matches">
-        <div class="lh-left">
-          <span class="league-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
-          <div>
-            <div class="league-name">Premier League</div>
-            <div class="league-sub">England</div>
-          </div>
-        </div>
-        <div class="lh-count">2</div>
-      </div>
-      <div class="match-row focusable" tabindex="0" role="row" aria-label="Liverpool FC vs Manchester United">
-        <div class="match-time-col">
-          <div class="match-time">17:30</div>
-          <div class="match-live-label">LIVE 67'</div>
-        </div>
-        <div class="teams-col">
-          <div class="team-line"><div class="team-crest">🔴</div><span class="team-lname">Liverpool FC</span></div>
-          <div class="team-line"><div class="team-crest">🔴</div><span class="team-lname">Manchester United</span></div>
-        </div>
-        <div class="odds-col">
-          <div class="odd-pill focusable" tabindex="0">1.50</div>
-          <div class="odd-pill focusable" tabindex="0">3.40</div>
-          <div class="odd-pill top focusable" tabindex="0">2.25</div>
-        </div>
-        <div class="match-btn focusable" tabindex="0">+1277</div>
-        <div class="match-more">More →</div>
-      </div>
-      <div class="match-row focusable" tabindex="0" role="row" aria-label="Manchester City vs Tottenham Hotspur">
-        <div class="match-time-col">
-          <div class="match-time">20:00</div>
-        </div>
-        <div class="teams-col">
-          <div class="team-line"><div class="team-crest">🔵</div><span class="team-lname">Manchester City</span></div>
-          <div class="team-line"><div class="team-crest">⚪</div><span class="team-lname">Tottenham Hotspur</span></div>
-        </div>
-        <div class="odds-col">
-          <div class="odd-pill focusable" tabindex="0">1.75</div>
-          <div class="odd-pill focusable" tabindex="0">3.40</div>
-          <div class="odd-pill focusable" tabindex="0">2.50</div>
-        </div>
-        <div class="match-btn focusable" tabindex="0">+1140</div>
-        <div class="match-more">More →</div>
-      </div>
-    </div>
-
-    <!-- LA LIGA GROUP -->
-    <div class="league-group">
-      <div class="league-header focusable" tabindex="0" role="button" aria-label="La Liga matches">
-        <div class="lh-left">
-          <span class="league-flag">🇪🇸</span>
-          <div>
-            <div class="league-name">La Liga</div>
-            <div class="league-sub">Spain</div>
-          </div>
-        </div>
-        <div class="lh-count">2</div>
-      </div>
-      <div class="match-row focusable" tabindex="0" role="row" aria-label="Real Madrid vs Atletico Madrid">
-        <div class="match-time-col">
-          <div class="match-time">19:00</div>
-        </div>
-        <div class="teams-col">
-          <div class="team-line"><div class="team-crest">⚪</div><span class="team-lname">Real Madrid</span></div>
-          <div class="team-line"><div class="team-crest">🔴</div><span class="team-lname">Atletico Madrid</span></div>
-        </div>
-        <div class="odds-col">
-          <div class="odd-pill focusable" tabindex="0">1.70</div>
-          <div class="odd-pill focusable" tabindex="0">4.10</div>
-          <div class="odd-pill top focusable" tabindex="0">3.05</div>
-        </div>
-        <div class="match-btn focusable" tabindex="0">+1100</div>
-        <div class="match-more">More →</div>
-      </div>
-      <div class="match-row focusable" tabindex="0" role="row" aria-label="FC Barcelona vs Athletic Bilbao">
-        <div class="match-time-col">
-          <div class="match-time">21:30</div>
-        </div>
-        <div class="teams-col">
-          <div class="team-line"><div class="team-crest">🔵</div><span class="team-lname">FC Barcelona</span></div>
-          <div class="team-line"><div class="team-crest">🔴</div><span class="team-lname">Athletic Bilbao</span></div>
-        </div>
-        <div class="odds-col">
-          <div class="odd-pill top focusable" tabindex="0">1.20</div>
-          <div class="odd-pill focusable" tabindex="0">4.50</div>
-          <div class="odd-pill focusable" tabindex="0">1.15</div>
-        </div>
-        <div class="match-btn focusable" tabindex="0">+1270</div>
-        <div class="match-more">More →</div>
-      </div>
-    </div>
-
-    <!-- NEWS GRID -->
-    <div class="news-section" aria-label="Latest sports news">
-      <div class="sec-head">
-        <span class="sec-title">Latest News</span>
-        <span class="sec-date" id="news-count">8 articles</span>
-      </div>
-      <div class="news-grid" id="news-grid"></div>
-    </div>
-
-  </main>
-
-  <!-- RIGHT PANEL -->
-  <aside class="right-panel" role="complementary" aria-label="Live match and bet slip">
-
-    <!-- Popular Live Match -->
-    <div>
-      <div class="rp-section-title">Popular Live Matches</div>
-      <div class="rp-sub">Italy / Serie A · Matchday 2 of 38</div>
-      <div class="live-match-card focusable" tabindex="0" role="button" aria-label="Napoli versus Inter Milan live match">
-        <div class="lmc-top">
-          <div class="lmc-badge"><div class="lmc-dot"></div>Live</div>
-          <div class="lmc-matchday">1:42</div>
-        </div>
-        <div class="lmc-score-row">
-          <div class="lmc-club">
-            <div class="lmc-crest">🔵</div>
-            <div class="lmc-cname">Napoli</div>
-          </div>
-          <div class="lmc-score-box">
-            <div class="lmc-score" style="color:var(--txt);">2<span style="color:var(--txt3);font-size:32px;margin:0 6px;">:</span>1</div>
-          </div>
-          <div class="lmc-club">
-            <div class="lmc-crest">⚫</div>
-            <div class="lmc-cname">Inter</div>
-          </div>
-        </div>
-        <div class="lmc-odds-row">
-          <div class="lmc-odd focusable" tabindex="0">
-            <span class="lmc-odd-lbl">1</span>2.10
-          </div>
-          <div class="lmc-odd focusable" tabindex="0">
-            <span class="lmc-odd-lbl">X</span>2.80
-          </div>
-          <div class="lmc-odd focusable" tabindex="0">
-            <span class="lmc-odd-lbl">2</span>1.70
-          </div>
-        </div>
-        <div class="lmc-detail focusable" tabindex="0" role="button">
-          🔍 Match details
-        </div>
-      </div>
-    </div>
-
-    <!-- Bet Slip -->
-    <div>
-      <div class="rp-section-title">Bet Slip</div>
-      <div class="betslip-card">
-        <div class="bs-type-row">
-          <button class="bs-type active focusable" tabindex="0">Single 🔵</button>
-          <button class="bs-type focusable"         tabindex="0">Multi</button>
-        </div>
-        <div class="bs-item">
-          <div class="bs-match">Liverpool FC – Manchester United</div>
-          <div class="bs-pick">Manchester United <span class="bs-odd-val">2.20</span></div>
-        </div>
-        <div class="bs-stake-row">
-          <span class="bs-stake-lbl">Stake</span>
-          <span class="bs-stake-val">$150.00</span>
-        </div>
-        <div class="bs-info-row">
-          <span class="bs-info-lbl">ODDS: 2.10</span>
-          <span class="bs-info-val">Potential win: $330.00</span>
-        </div>
-        <button class="bs-btn focusable" tabindex="0" role="button" aria-label="Place a bet">Place a bet</button>
-      </div>
-    </div>
-
-  </aside>
-
-</div><!-- body-wrap -->
-
-<!-- ══ FOOTER ════════════════════════════════════════════════ -->
+<!-- ══ FOOTER ══════════════════════════════════════════════════ -->
 <footer>
-  <p class="foot-left">© 2025 Arena News. All rights reserved.</p>
+  <p class="foot-copy">© 2025 Arena Sports. All rights reserved.</p>
   <div class="foot-links">
-    <a href="privacy.html" class="focusable" tabindex="0" role="link">Privacy Policy</a>
-    <a href="#"            class="focusable" tabindex="0" role="link">Terms of Use</a>
-    <a href="#"            class="focusable" tabindex="0" role="link">About</a>
-    <a href="#"            class="focusable" tabindex="0" role="link">Contact</a>
+    <a href="privacy.html" class="focusable" tabindex="0">Privacy Policy</a>
+    <a href="#"            class="focusable" tabindex="0">Terms of Use</a>
+    <a href="#"            class="focusable" tabindex="0">About</a>
   </div>
   <div class="foot-ver">v2.1.5-stable</div>
 </footer>
+
+<!-- ══ DRAWER ══════════════════════════════════════════════════ -->
+<div id="drawer-overlay"></div>
+<div id="drawer" role="dialog" aria-modal="true" aria-label="Match details">
+  <!-- filled by JS -->
+</div>
 
 </div><!-- #app -->
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   NEWS DATA
+   DATA
 ═══════════════════════════════════════════════════════════════ */
-var NEWS_DATA = [
-  {cat:'football',  cls:'cat-football',  live:1, src:'BBC Sport',  time:'Now',    img:'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=700&q=80',  title:'Champions League: Real Madrid Dominate Semi-Final First Leg'},
-  {cat:'basketball',cls:'cat-basketball',live:0, src:'ESPN',        time:'12 min', img:'https://images.unsplash.com/photo-1546519638405-a4dca5ebdc2e?w=700&q=80',  title:'NBA Finals: Celtics Take a Commanding 3-1 Series Lead'},
-  {cat:'football',  cls:'cat-football',  live:0, src:'Sky Sports',  time:'35 min', img:'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=700&q=80',  title:'Erling Haaland Scores Hat-trick as Man City Crush Arsenal'},
-  {cat:'tennis',    cls:'cat-tennis',    live:0, src:'Tennis.com',  time:'1h',     img:'https://images.unsplash.com/photo-1595435193278-32e10fe7e659?w=700&q=80',  title:'Alcaraz Defeats Djokovic in Epic Wimbledon Five-Set Thriller'},
-  {cat:'football',  cls:'cat-football',  live:1, src:'UEFA',        time:'Live',   img:'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=700&q=80',  title:'Vinicius Jr. Named Champions League Player of the Week'},
-  {cat:'basketball',cls:'cat-basketball',live:0, src:'ESPN',        time:'2h',     img:'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=700&q=80',  title:'LeBron James Surpasses All-Time Scoring Record in Lakers Win'},
-  {cat:'football',  cls:'cat-football',  live:0, src:'Guardian',    time:'3h',     img:'https://images.unsplash.com/photo-1511886929837-354d827aae26?w=700&q=80',  title:'Bundesliga: Bayern Munich Sign €80M Striker from Juventus'},
-  {cat:'f1',        cls:'cat-f1',        live:0, src:'F1.com',      time:'4h',     img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80',     title:'Verstappen Dominates Qualifying, Secures Pole at Monza GP'}
+var MATCHES = [
+  {
+    id:'m1', filter:'ucl', league:'UEFA Champions League', phase:'Quarter-finals',
+    home:{name:'Real Madrid', crest:'⚪', short:'RMA'},
+    away:{name:'Man City',    crest:'🔵', short:'MCI'},
+    status:'live', min:"72'", score:{h:3,a:1},
+    venue:'Santiago Bernabéu, Madrid', date:'Today 21:00',
+    lineup:{
+      home:[{n:1,name:'Courtois',pos:'GK'},{n:2,name:'Carvajal',pos:'RB'},{n:3,name:'Militão',pos:'CB'},{n:4,name:'Alaba',pos:'CB'},{n:5,name:'Mendy',pos:'LB'},{n:8,name:'Kroos',pos:'CM'},{n:10,name:'Modric',pos:'CM'},{n:14,name:'Valverde',pos:'CM'},{n:11,name:'Rodrygo',pos:'RW'},{n:9,name:'Benzema',pos:'ST'},{n:7,name:'Vinicius Jr',pos:'LW'}],
+      away:[{n:31,name:'Ederson',pos:'GK'},{n:2,name:'Walker',pos:'RB'},{n:3,name:'Ruben Dias',pos:'CB'},{n:5,name:'Stones',pos:'CB'},{n:6,name:'Gvardiol',pos:'LB'},{n:16,name:'Rodri',pos:'CDM'},{n:8,name:'Kovacic',pos:'CM'},{n:20,name:'Bernardo',pos:'CM'},{n:10,name:'Grealish',pos:'LW'},{n:9,name:'Haaland',pos:'ST'},{n:26,name:'Doku',pos:'RW'}]
+    }
+  },
+  {
+    id:'m2', filter:'laliga', league:'La Liga', phase:'Matchday 28',
+    home:{name:'Barcelona', crest:'🔵', short:'BAR'},
+    away:{name:'Sevilla',   crest:'🔴', short:'SEV'},
+    status:'ft', min:'FT', score:{h:2,a:0},
+    venue:'Camp Nou, Barcelona', date:'Today 18:30',
+    lineup:{
+      home:[{n:1,name:'Ter Stegen',pos:'GK'},{n:23,name:'Koundé',pos:'RB'},{n:15,name:'Christensen',pos:'CB'},{n:4,name:'Ronald Araújo',pos:'CB'},{n:3,name:'Balde',pos:'LB'},{n:8,name:'Pedri',pos:'CM'},{n:5,name:'Gavi',pos:'CM'},{n:21,name:'De Jong',pos:'CM'},{n:7,name:'Torres',pos:'RW'},{n:9,name:'Lewandowski',pos:'ST'},{n:11,name:'Raphinha',pos:'LW'}],
+      away:[{n:13,name:'Dmitrovic',pos:'GK'},{n:18,name:'Navas',pos:'RB'},{n:24,name:'Bade',pos:'CB'},{n:16,name:'Gudelj',pos:'CB'},{n:3,name:'Acuña',pos:'LB'},{n:6,name:'Fernando',pos:'CDM'},{n:14,name:'Rakitic',pos:'CM'},{n:8,name:'Jordan',pos:'CM'},{n:11,name:'Lamela',pos:'RW'},{n:22,name:'En-Nesyri',pos:'ST'},{n:17,name:'Suso',pos:'LW'}]
+    }
+  },
+  {
+    id:'m3', filter:'nba', league:'NBA – Western Conference', phase:'Regular Season · Game 61',
+    home:{name:'LA Lakers', crest:'🟡', short:'LAL'},
+    away:{name:'Warriors',  crest:'🔵', short:'GSW'},
+    status:'live', min:"Q3 4:22", score:{h:87,a:91},
+    venue:'Chase Center, San Francisco', date:'Today 21:30',
+    lineup:{
+      home:[{n:23,name:'LeBron James',pos:'SF'},{n:3,name:'Anthony Davis',pos:'PF'},{n:1,name:'D\'Angelo Russell',pos:'PG'},{n:5,name:'Austin Reaves',pos:'SG'},{n:8,name:'Jarred Vanderbilt',pos:'C'}],
+      away:[{n:30,name:'Stephen Curry',pos:'PG'},{n:11,name:'Klay Thompson',pos:'SG'},{n:23,name:'Draymond Green',pos:'PF'},{n:5,name:'Kevon Looney',pos:'C'},{n:3,name:'Jordan Poole',pos:'SF'}]
+    }
+  },
+  {
+    id:'m4', filter:'epl', league:'Premier League', phase:'Matchday 30',
+    home:{name:'Arsenal',  crest:'🔴', short:'ARS'},
+    away:{name:'Chelsea',  crest:'🔵', short:'CHE'},
+    status:'soon', min:'20:45', score:{h:0,a:0},
+    venue:'Emirates Stadium, London', date:'Today 20:45',
+    lineup:null
+  },
+  {
+    id:'m5', filter:'ucl', league:'UEFA Champions League', phase:'Quarter-finals',
+    home:{name:'Bayern',  crest:'🔴', short:'FCB'},
+    away:{name:'PSG',     crest:'🔵', short:'PSG'},
+    status:'soon', min:'21:00', score:{h:0,a:0},
+    venue:'Allianz Arena, Munich', date:'Today 21:00',
+    lineup:null
+  },
+  {
+    id:'m6', filter:'serie_a', league:'Serie A', phase:'Matchday 27',
+    home:{name:'Napoli', crest:'🔵', short:'NAP'},
+    away:{name:'Inter',  crest:'⚫', short:'INT'},
+    status:'ft', min:'FT', score:{h:2,a:1},
+    venue:'Stadio Diego Armando Maradona', date:'Today 15:00',
+    lineup:{
+      home:[{n:1,name:'Meret',pos:'GK'},{n:22,name:'Di Lorenzo',pos:'RB'},{n:5,name:'Rrahmani',pos:'CB'},{n:13,name:'Natan',pos:'CB'},{n:6,name:'Olivera',pos:'LB'},{n:68,name:'Lobotka',pos:'CDM'},{n:7,name:'Zielinski',pos:'CM'},{n:99,name:'Politano',pos:'RW'},{n:81,name:'Raspadori',pos:'SS'},{n:77,name:'Kvaratskhelia',pos:'LW'}],
+      away:[{n:1,name:'Sommer',pos:'GK'},{n:36,name:'Darmian',pos:'RB'},{n:15,name:'Acerbi',pos:'CB'},{n:6,name:'De Vrij',pos:'CB'},{n:32,name:'Dimarco',pos:'LB'},{n:23,name:'Barella',pos:'CM'},{n:20,name:'Calhanoglu',pos:'CDM'},{n:22,name:'Mkhitaryan',pos:'CM'},{n:10,name:'Lautaro',pos:'ST'},{n:9,name:'Thuram',pos:'ST'}]
+    }
+  },
+  {
+    id:'m7', filter:'bundesliga', league:'Bundesliga', phase:'Matchday 26',
+    home:{name:'Dortmund',  crest:'🟡', short:'BVB'},
+    away:{name:'Leverkusen',crest:'🔴', short:'B04'},
+    status:'live', min:"58'", score:{h:1,a:2},
+    venue:'Signal Iduna Park, Dortmund', date:'Today 17:30',
+    lineup:{
+      home:[{n:1,name:'Kobel',pos:'GK'},{n:26,name:'Ryerson',pos:'RB'},{n:4,name:'Schlotterbeck',pos:'CB'},{n:25,name:'Hummels',pos:'CB'},{n:28,name:'Maatsen',pos:'LB'},{n:6,name:'Can',pos:'CDM'},{n:19,name:'Brandt',pos:'CM'},{n:14,name:'Füllkrug',pos:'ST'},{n:22,name:'Malen',pos:'LW'},{n:10,name:'Reus',pos:'AM'}],
+      away:[{n:1,name:'Hradecky',pos:'GK'},{n:5,name:'Tapsoba',pos:'CB'},{n:4,name:'Tah',pos:'CB'},{n:3,name:'Hincapié',pos:'LB'},{n:18,name:'Frimpong',pos:'RB'},{n:10,name:'Wirtz',pos:'AM'},{n:21,name:'Andrich',pos:'CDM'},{n:8,name:'Palacios',pos:'CM'},{n:11,name:'Hofmann',pos:'RW'},{n:14,name:'Boniface',pos:'ST'},{n:7,name:'Adli',pos:'LW'}]
+    }
+  },
+  {
+    id:'m8', filter:'nba', league:'NBA – Eastern Conference', phase:'Regular Season · Game 59',
+    home:{name:'Celtics',  crest:'🟢', short:'BOS'},
+    away:{name:'Heat',     crest:'🔴', short:'MIA'},
+    status:'ft', min:'Final', score:{h:112,a:98},
+    venue:'TD Garden, Boston', date:'Today 13:00',
+    lineup:{
+      home:[{n:0,name:'Jayson Tatum',pos:'SF'},{n:7,name:'Jaylen Brown',pos:'SG'},{n:11,name:'Payton Pritchard',pos:'PG'},{n:8,name:'Kristaps Porzingis',pos:'C'},{n:13,name:'Malcolm Brogdon',pos:'G'}],
+      away:[{n:22,name:'Jimmy Butler',pos:'SF'},{n:5,name:'Nikola Jovic',pos:'PF'},{n:15,name:'Thomas Bryant',pos:'C'},{n:3,name:'Kyle Lowry',pos:'PG'},{n:50,name:'Jaime Jaquez',pos:'SG'}]
+    }
+  }
 ];
 
-function buildNews(list) {
-  var h = '';
-  for (var i = 0; i < list.length; i++) {
-    var n = list[i];
-    var lv = n.live ? '<div class="nc-live"><div class="dot"></div>LIVE</div>' : '';
-    h += '<article class="news-card focusable" tabindex="0" role="button" aria-label="' + n.title + '">'
-       +   '<div class="nc-img">'
-       +     '<img src="' + n.img + '" alt="' + n.title + '" loading="lazy"/>'
-       +     '<div class="nc-cat ' + n.cls + '">' + n.cat + '</div>'
-       +     lv
-       +   '</div>'
-       +   '<div class="nc-body">'
-       +     '<div class="nc-meta"><span class="nc-src">' + n.src + '</span><span class="nc-dot">&middot;</span><span class="nc-time">' + n.time + '</span></div>'
-       +     '<h3 class="nc-title">' + n.title + '</h3>'
-       +   '</div>'
-       + '</article>';
-  }
-  document.getElementById('news-grid').innerHTML = h;
-  document.getElementById('news-count').textContent = list.length + ' articles';
-}
-buildNews(NEWS_DATA);
+var NEWS_DATA = [
+  {cat:'football', cls:'ncat-football', src:'UEFA',       img:'https://images.unsplash.com/photo-1552667466-07770ae110d0?w=700&q=80',  title:'Real Madrid Reach Champions League Semi-Finals After Dominant Display'},
+  {cat:'basketball',cls:'ncat-basketball',src:'ESPN',     img:'https://images.unsplash.com/photo-1546519638405-a4dca5ebdc2e?w=700&q=80',title:'Warriors Rally Late to Overtake Lakers in Thrilling Conference Clash'},
+  {cat:'football', cls:'ncat-football', src:'Sky Sports', img:'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=700&q=80', title:'Vinicius Jr. Player of the Week After Hat-trick at Bernabéu'},
+  {cat:'local',    cls:'ncat-local',    src:'Globo Esp.', img:'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=700&q=80',  title:'Remo Beats Paysandu 3-0 in Clássico Rei and Goes Top of the Table'},
+  {cat:'football', cls:'ncat-football', src:'Guardian',   img:'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=700&q=80', title:'Haaland Scores Twice as Man City Close Gap on Leaders'},
+  {cat:'basketball',cls:'ncat-basketball',src:'NBA.com',  img:'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=700&q=80',title:'LeBron Passes All-Time Assist Record — "Unbelievable Journey"'},
+  {cat:'football', cls:'ncat-football', src:'Marca',      img:'https://images.unsplash.com/photo-1518604666860-9ed391f76460?w=700&q=80', title:'Barcelona Close In on La Liga Title With 3-1 Win Over Atletico'},
+  {cat:'football', cls:'ncat-football', src:'L\'Équipe',  img:'https://images.unsplash.com/photo-1511886929837-354d827aae26?w=700&q=80', title:'PSG Prepare Squad Rotation Ahead of Champions League Away Leg'}
+];
 
 /* ═══════════════════════════════════════════════════════════════
    CLOCK
 ═══════════════════════════════════════════════════════════════ */
-var DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var MTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function pad(n){return n<10?'0'+n:''+n;}
 function tick(){
   var d=new Date();
-  document.getElementById('clock').textContent = pad(d.getHours())+':'+pad(d.getMinutes());
-  document.getElementById('cdate').textContent  = DAYS[d.getDay()]+', '+d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();
-  document.getElementById('match-date').textContent = MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+  document.getElementById('clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  document.getElementById('cdate').textContent=DAYS[d.getDay()]+', '+d.getDate()+' '+MTHS[d.getMonth()]+' '+d.getFullYear();
 }
-tick();
-setInterval(tick,1000);
+tick(); setInterval(tick,1000);
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER MATCHES
+═══════════════════════════════════════════════════════════════ */
+function statusHtml(m){
+  if(m.status==='live'){
+    return '<div class="mc-status status-live"><div class="dot"></div>LIVE '+m.min+'</div>';
+  } else if(m.status==='ft'){
+    return '<div class="mc-status status-ft">Full Time</div>';
+  }
+  return '<div class="mc-status status-soon">'+m.min+'</div>';
+}
+function stripeClass(s){
+  return s==='live'?'stripe-live':s==='ft'?'stripe-ft':'stripe-soon';
+}
+function scoreHtml(m){
+  if(m.status==='soon'){
+    return '<div class="mc-score score-soon">'+m.home.short+' v '+m.away.short+'</div>'
+          +'<div class="mc-min">'+m.min+'</div>';
+  }
+  var cls = m.status==='live'?'score-live':'';
+  return '<div class="mc-score '+cls+'">'+m.score.h+'<span style="color:var(--txt3);margin:0 4px;font-size:32px;">:</span>'+m.score.a+'</div>'
+        +(m.status==='live'?'<div class="mc-min">'+m.min+'</div>':'');
+}
+
+function renderMatches(list){
+  var h='';
+  for(var i=0;i<list.length;i++){
+    var m=list[i];
+    h+='<div class="match-card focusable card-focus" tabindex="0" role="button" data-id="'+m.id+'" aria-label="'+m.home.name+' vs '+m.away.name+'">'
+     +'<div class="mc-stripe '+stripeClass(m.status)+'"></div>'
+     +'<div class="mc-head"><span class="mc-league">'+m.league+'</span>'+statusHtml(m)+'</div>'
+     +'<div class="mc-body">'
+     +'<div class="mc-teams">'
+     +'<div class="mc-team"><div class="mc-crest">'+m.home.crest+'</div><div class="mc-tname">'+m.home.name+'</div></div>'
+     +'<div class="mc-score-col">'+scoreHtml(m)+'</div>'
+     +'<div class="mc-team"><div class="mc-crest">'+m.away.crest+'</div><div class="mc-tname">'+m.away.name+'</div></div>'
+     +'</div>'
+     +'</div>'
+     +'<div class="mc-foot"><span class="mc-venue">🏟 '+m.venue+'</span><span class="mc-arrow">Details ›</span></div>'
+     +'</div>';
+  }
+  document.getElementById('matches-grid').innerHTML=h;
+  document.getElementById('match-count').textContent=list.length+' matches';
+}
+
+function renderNews(){
+  var h='';
+  for(var i=0;i<NEWS_DATA.length;i++){
+    var n=NEWS_DATA[i];
+    h+='<div class="news-card">'
+     +'<div class="nc-img"><img src="'+n.img+'" alt="'+n.title+'" loading="lazy"/>'
+     +'<div class="nc-cat '+n.cls+'">'+n.cat+'</div></div>'
+     +'<div class="nc-body"><div class="nc-src">'+n.src+'</div>'
+     +'<h3 class="nc-title">'+n.title+'</h3></div>'
+     +'</div>';
+  }
+  document.getElementById('news-grid').innerHTML=h;
+}
+
+renderMatches(MATCHES);
+renderNews();
 
 /* ═══════════════════════════════════════════════════════════════
    CATEGORY FILTER
 ═══════════════════════════════════════════════════════════════ */
-var navBtns = document.querySelectorAll('.nav-item');
-for (var ni=0;ni<navBtns.length;ni++){
+var navBtns=document.querySelectorAll('.nav-btn');
+for(var ni=0;ni<navBtns.length;ni++){
   navBtns[ni].addEventListener('click',(function(btn){
     return function(){
       for(var j=0;j<navBtns.length;j++) navBtns[j].classList.remove('active');
       btn.classList.add('active');
-      var cat = btn.getAttribute('data-cat');
-      var filtered = [];
-      if(cat==='football'){
-        for(var k=0;k<NEWS_DATA.length;k++) if(NEWS_DATA[k].cat==='football') filtered.push(NEWS_DATA[k]);
-      } else if(cat==='basketball'){
-        for(var k=0;k<NEWS_DATA.length;k++) if(NEWS_DATA[k].cat==='basketball') filtered.push(NEWS_DATA[k]);
-      } else {
-        filtered = NEWS_DATA;
-      }
-      buildNews(filtered.length ? filtered : NEWS_DATA);
+      var f=btn.getAttribute('data-filter');
+      var list=f==='all'?MATCHES:MATCHES.filter(function(m){return m.filter===f;});
+      renderMatches(list.length?list:MATCHES);
       rebuildFocusable();
     };
   })(navBtns[ni]));
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   DRAWER
+═══════════════════════════════════════════════════════════════ */
+var drawerOpen=false;
+var drawerSourceIdx=-1;
+
+function openDrawer(matchId){
+  var m=null;
+  for(var i=0;i<MATCHES.length;i++) if(MATCHES[i].id===matchId){m=MATCHES[i];break;}
+  if(!m) return;
+
+  /* score display */
+  var scoreTxt, scoreCls, statusCls, statusTxt, minTxt='';
+  if(m.status==='live'){
+    scoreTxt=m.score.h+' : '+m.score.a; scoreCls='live';
+    statusCls='dsb-live'; statusTxt='● LIVE';
+    minTxt='<div class="dr-min">'+m.min+'</div>';
+  } else if(m.status==='ft'){
+    scoreTxt=m.score.h+' : '+m.score.a; scoreCls='';
+    statusCls='dsb-ft'; statusTxt='Full Time';
+  } else {
+    scoreTxt=m.min; scoreCls='soon';
+    statusCls='dsb-soon'; statusTxt='Scheduled';
+  }
+
+  /* lineups */
+  var luHtml='';
+  if(m.lineup){
+    var hpl='', apl='';
+    for(var p=0;p<m.lineup.home.length;p++){
+      var pl=m.lineup.home[p];
+      hpl+='<div class="dr-player"><span class="dr-pnum">'+pl.n+'</span><span class="dr-pname">'+pl.name+'</span><span class="dr-ppos">'+pl.pos+'</span></div>';
+    }
+    for(var q=0;q<m.lineup.away.length;q++){
+      var ql=m.lineup.away[q];
+      apl+='<div class="dr-player"><span class="dr-pnum">'+ql.n+'</span><span class="dr-pname">'+ql.name+'</span><span class="dr-ppos">'+ql.pos+'</span></div>';
+    }
+    luHtml='<div class="dr-lineup-block">'
+          +'<div class="dr-lu-title">Starting Lineups</div>'
+          +'<div class="dr-lu-grid">'
+          +'<div class="dr-lu-team"><div class="dr-lu-tname">'+m.home.name+'</div>'+hpl+'</div>'
+          +'<div class="dr-lu-team"><div class="dr-lu-tname">'+m.away.name+'</div>'+apl+'</div>'
+          +'</div></div>';
+  }
+
+  document.getElementById('drawer').innerHTML=
+    '<div class="dr-header">'
+   +'<div class="dr-back">← Press BACK to close</div>'
+   +'<div class="dr-competition">'+m.league+'</div>'
+   +'<div class="dr-phase">'+m.phase+'</div>'
+   +'<div class="dr-venue">🏟 '+m.venue+'</div>'
+   +'</div>'
+   +'<div class="dr-score-block">'
+   +'<div class="dr-teams-row">'
+   +'<div class="dr-club"><div class="dr-crest">'+m.home.crest+'</div><div class="dr-cname">'+m.home.name+'</div></div>'
+   +'<div class="dr-score-center">'
+   +'<div class="dr-score '+scoreCls+'">'+scoreTxt+'</div>'
+   +'<div class="dr-status-badge '+statusCls+'">'+statusTxt+'</div>'
+   +minTxt
+   +'</div>'
+   +'<div class="dr-club"><div class="dr-crest">'+m.away.crest+'</div><div class="dr-cname">'+m.away.name+'</div></div>'
+   +'</div>'
+   +'</div>'
+   +'<div class="dr-info-block">'
+   +'<div class="dr-info-title">Match Info</div>'
+   +'<div class="dr-info-row"><span class="dr-il">Competition</span><span class="dr-iv">'+m.league+'</span></div>'
+   +'<div class="dr-info-row"><span class="dr-il">Stage</span><span class="dr-iv">'+m.phase+'</span></div>'
+   +'<div class="dr-info-row"><span class="dr-il">Stadium</span><span class="dr-iv">'+m.venue+'</span></div>'
+   +'<div class="dr-info-row"><span class="dr-il">Date &amp; Time</span><span class="dr-iv">'+m.date+'</span></div>'
+   +'</div>'
+   +luHtml;
+
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  drawerOpen=true;
+  document.getElementById('drawer').scrollTop=0;
+
+  /* trap focus inside drawer — no focusable elements currently, just scroll */
+}
+
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  drawerOpen=false;
+  /* return focus to the card that opened it */
+  if(drawerSourceIdx>=0) setFocus(drawerSourceIdx);
+}
+
+/* click on overlay closes drawer */
+document.getElementById('drawer-overlay').addEventListener('click',function(){
+  if(drawerOpen) closeDrawer();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   MATCH CARD CLICK — delegate
+═══════════════════════════════════════════════════════════════ */
+document.getElementById('matches-grid').addEventListener('click',function(e){
+  var card=e.target.closest('.match-card');
+  if(!card) return;
+  drawerSourceIdx=fEls.indexOf(card);
+  openDrawer(card.getAttribute('data-id'));
+});
+
+/* ═══════════════════════════════════════════════════════════════
    SPATIAL NAVIGATION
 ═══════════════════════════════════════════════════════════════ */
-var fEls = [];
-var fIdx = 0;
+var fEls=[], fIdx=0;
 
 function rebuildFocusable(){
-  fEls = Array.prototype.slice.call(document.querySelectorAll('.focusable'));
+  fEls=Array.prototype.slice.call(document.querySelectorAll('.focusable'));
   if(fIdx>=fEls.length) fIdx=0;
 }
 
@@ -968,19 +750,18 @@ function setFocus(idx){
   var el=fEls[fIdx];
   el.classList.add('focused');
   el.focus({preventScroll:false});
-  /* scroll into view inside scrollable containers */
-  var mc=document.getElementById('main-content');
+  /* scroll main panel */
+  var main=document.getElementById('main');
   var r=el.getBoundingClientRect();
-  var pr=mc.getBoundingClientRect();
-  if(r.bottom>pr.bottom-20) mc.scrollTop+=r.bottom-pr.bottom+40;
-  if(r.top<pr.top+20)       mc.scrollTop-=pr.top-r.top+40;
+  var pr=main.getBoundingClientRect();
+  if(r.bottom>pr.bottom-24) main.scrollTop+=r.bottom-pr.bottom+48;
+  if(r.top<pr.top+24)       main.scrollTop-=pr.top-r.top+48;
 }
 
 function nearest(dir){
-  var cur=fEls[fIdx];
-  if(!cur) return -1;
+  var cur=fEls[fIdx]; if(!cur) return -1;
   var cc=elCenter(cur);
-  var best=-1, bscore=Infinity;
+  var best=-1, bs=Infinity;
   for(var i=0;i<fEls.length;i++){
     if(i===fIdx) continue;
     var ec=elCenter(fEls[i]);
@@ -992,54 +773,72 @@ function nearest(dir){
     else if(dir==='up')   { if(dy>=-2) continue; primary=-dy; secondary=Math.abs(dx); }
     else continue;
     var score=primary+secondary*0.3;
-    if(score<bscore){bscore=score;best=i;}
+    if(score<bs){bs=score;best=i;}
   }
   return best;
 }
 
-/* Tizen keycodes */
 var KU=[38], KD=[40], KL=[37], KR=[39], KE=[13], KB=[8,10009];
 function inK(c,a){for(var i=0;i<a.length;i++)if(a[i]===c)return true;return false;}
 
 document.addEventListener('keydown',function(e){
+  var kc=e.keyCode;
+
+  /* drawer is open — only BACK closes it, arrows scroll */
+  if(drawerOpen){
+    if(inK(kc,KB)){
+      e.preventDefault();
+      closeDrawer();
+    } else if(inK(kc,KD)){
+      e.preventDefault();
+      document.getElementById('drawer').scrollTop+=160;
+    } else if(inK(kc,KU)){
+      e.preventDefault();
+      document.getElementById('drawer').scrollTop-=160;
+    }
+    return;
+  }
+
   if(!fEls.length) return;
-  var kc=e.keyCode, t=-1;
+  var t=-1;
   if(inK(kc,KU)){e.preventDefault();t=nearest('up');   if(t>=0)setFocus(t);}
   else if(inK(kc,KD)){e.preventDefault();t=nearest('down'); if(t>=0)setFocus(t);}
   else if(inK(kc,KL)){e.preventDefault();t=nearest('left'); if(t>=0)setFocus(t);}
   else if(inK(kc,KR)){e.preventDefault();t=nearest('right');if(t>=0)setFocus(t);}
-  else if(inK(kc,KE)){e.preventDefault();if(fEls[fIdx])fEls[fIdx].click();}
-  else if(inK(kc,KB)){e.preventDefault();setFocus(0);document.getElementById('main-content').scrollTop=0;}
+  else if(inK(kc,KE)){
+    e.preventDefault();
+    var el=fEls[fIdx];
+    if(el){
+      var card=el.classList.contains('match-card')?el:null;
+      if(card){
+        drawerSourceIdx=fIdx;
+        openDrawer(card.getAttribute('data-id'));
+      } else {
+        el.click();
+      }
+    }
+  } else if(inK(kc,KB)){
+    e.preventDefault();
+    setFocus(0);
+    document.getElementById('main').scrollTop=0;
+  }
 });
 
 document.addEventListener('mouseover',function(e){
+  if(drawerOpen) return;
   var el=e.target&&e.target.closest?e.target.closest('.focusable'):null;
-  if(!el)return;
+  if(!el) return;
   var idx=fEls.indexOf(el);
-  if(idx>=0)setFocus(idx);
+  if(idx>=0) setFocus(idx);
 });
 
-/* Tizen Back key registration */
+/* Tizen back key */
 if(typeof tizen!=='undefined'){
   try{tizen.tvinputdevice.registerKey('Back');}catch(ex){}
 }
 
-/* Init */
 rebuildFocusable();
 setFocus(0);
-
-/* ═══════════════════════════════════════════════════════════════
-   SEC TABS ACTIVE TOGGLE
-═══════════════════════════════════════════════════════════════ */
-var secTabs=document.querySelectorAll('.sec-tab');
-for(var ti=0;ti<secTabs.length;ti++){
-  secTabs[ti].addEventListener('click',(function(tab){
-    return function(){
-      for(var tj=0;tj<secTabs.length;tj++) secTabs[tj].classList.remove('active');
-      tab.classList.add('active');
-    };
-  })(secTabs[ti]));
-}
 </script>
 </body>
 </html>
