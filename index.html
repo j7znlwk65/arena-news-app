@@ -41,7 +41,7 @@ html,body{
 header{flex-shrink:0;height:88px;width:100%;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 64px;gap:56px;}
 .logo{flex-shrink:0;display:flex;align-items:center;}
 .logo-svg{display:block;}
-.nav-wrap{flex:1;display:flex;align-items:center;position:relative;background:var(--bg3);border-radius:100px;height:var(--pill-h);padding:4px;border:1px solid var(--border);overflow-x:auto;overflow-y:hidden;scroll-behavior:smooth;}.nav-wrap::-webkit-scrollbar{display:none;}
+.nav-wrap{flex:1;display:flex;align-items:center;position:relative;background:var(--bg3);border-radius:100px;height:var(--pill-h);padding:4px;border:1px solid var(--border);overflow:hidden;}
 .nav-track{position:absolute;top:4px;bottom:4px;left:4px;background:var(--white);border-radius:100px;transition:left .25s cubic-bezier(.4,0,.2,1),width .25s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;}
 .nav-btn{position:relative;z-index:2;height:calc(var(--pill-h) - 8px);padding:0 28px;border-radius:100px;border:2px solid transparent;background:transparent;color:var(--white);font-family:var(--f-body);font-size:var(--fnav);font-weight:600;cursor:pointer;white-space:nowrap;transition:color var(--tr);outline:none;flex-shrink:0;}
 .nav-btn.active{color:var(--bg)!important;}
@@ -391,6 +391,39 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
   from{opacity:0;transform:translateY(20px);}
   to  {opacity:1;transform:translateY(0);}
 }
+
+/* ── TELA DE ERRO / SEM CONEXÃO ───────────────────────────── */
+.error-state{
+  grid-column:1/-1;
+  padding:72px 0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:20px;
+  font-family:var(--f-body);
+}
+.error-icon{font-size:52px;line-height:1;}
+.error-title{
+  font-family:var(--f-display);
+  font-size:var(--fsec);font-weight:800;
+  color:var(--white);text-align:center;
+}
+.error-msg{
+  font-size:var(--fbody);color:var(--grey);
+  text-align:center;line-height:1.6;max-width:600px;
+}
+.error-retry{
+  margin-top:8px;padding:12px 36px;
+  border-radius:100px;border:2px solid var(--border);
+  background:transparent;color:var(--white);
+  font-family:var(--f-body);font-size:var(--fbody);font-weight:700;
+  cursor:pointer;transition:all var(--tr);outline:none;
+}
+.error-retry:hover{background:var(--blue1);border-color:var(--blue1);}
+.error-retry.focused{
+  border-color:var(--white)!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35)!important;
+  background:var(--blue1);
+}
 </style>
 </head>
 <body>
@@ -448,18 +481,16 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 
   <nav role="navigation" aria-label="Filtro de campeonatos" id="nav-wrap" class="nav-wrap">
     <div class="nav-track" id="nav-track"></div>
-    <button class="nav-btn active focusable" tabindex="0" data-filter="all"          data-league=""    data-season="">Todos</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="live"         data-league=""    data-season="">Ao Vivo</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="champions"    data-league="2"   data-season="2024">Champions League</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="premier"      data-league="39"  data-season="2024">Premier League</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="laliga"       data-league="140" data-season="2024">La Liga</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="serie_a"      data-league="135" data-season="2024">Serie A</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="bundesliga"   data-league="78"  data-season="2024">Bundesliga</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="ligue1"       data-league="61"  data-season="2024">Ligue 1</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="brasileirao"  data-league="71"  data-season="2025">Brasileirão</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="libertadores" data-league="13"  data-season="2025">Libertadores</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="saudi"        data-league="307" data-season="2024">Saudi Pro League</button>
-    <button class="nav-btn focusable"         tabindex="0" data-filter="nba"          data-league=""    data-season="">NBA</button>
+    <button class="nav-btn active focusable" tabindex="0" data-filter="all">Todos</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="champions">Champions League</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="premier">Premier League</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="laliga">La Liga</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="serie_a">Serie A</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="bundesliga">Bundesliga</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="ligue1">Ligue 1</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="brasileirao">Brasileirão</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="nba">NBA</button>
+    <button class="nav-btn focusable" tabindex="0" data-filter="euroleague">EuroLeague</button>
   </nav>
 
   <div class="hdr-right">
@@ -507,790 +538,1063 @@ footer{flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);pad
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════════
-   API-FOOTBALL
-   Base URL : https://v3.football.api-sports.io
-   Chave    : x-apisports-key header
-   Proxy    : se a TV bloquear por CORS, mude USE_PROXY para true
+   ARENA SPORTS — MODO OFFLINE / MOCK DATA
+   100% funcional sem internet. Dados simulados realistas.
 ═══════════════════════════════════════════════════════════════ */
-var API_KEY   = 'e19c21998bd99cdc73d7d013ccdd4e3a';
-var API_BASE  = 'https://v3.football.api-sports.io';
-var PROXY     = 'https://api.allorigins.win/raw?url=';
-var USE_PROXY = false;
 
-/* NBA — mockado (API-Football não cobre NBA no plano gratuito) */
-var NBA_MOCK = [
-  { id:'nba1', apiId:null, league:'NBA — Conf. Leste', phase:'Temporada Regular', season:'2024-25',
-    home:{name:'Celtics', logo:'https://www.thesportsdb.com/images/media/team/badge/squuqy1423014297.png'},
-    away:{name:'Heat',    logo:'https://www.thesportsdb.com/images/media/team/badge/urpxvr1423014260.png'},
-    status:'soon', min:'00:30', score:{h:0,a:0}, venue:'TD Garden, Boston', city:'Boston', date:'Hoje', time:'00:30' },
-  { id:'nba2', apiId:null, league:'NBA — Conf. Oeste', phase:'Temporada Regular', season:'2024-25',
-    home:{name:'Lakers',  logo:'https://www.thesportsdb.com/images/media/team/badge/sqrtqy1423014256.png'},
-    away:{name:'Warriors',logo:'https://www.thesportsdb.com/images/media/team/badge/stsvqy1423014229.png'},
-    status:'soon', min:'02:30', score:{h:0,a:0}, venue:'Chase Center, San Francisco', city:'San Francisco', date:'Hoje', time:'02:30' },
-  { id:'nba3', apiId:null, league:'NBA — Conf. Oeste', phase:'Temporada Regular', season:'2024-25',
-    home:{name:'Nuggets', logo:'https://www.thesportsdb.com/images/media/team/badge/ctsrqy1423014266.png'},
-    away:{name:'Thunder', logo:'https://www.thesportsdb.com/images/media/team/badge/sqrwqr1423014261.png'},
-    status:'soon', min:'03:00', score:{h:0,a:0}, venue:'Ball Arena, Denver', city:'Denver', date:'Hoje', time:'03:00' }
-];
-
-/* Labels do nav */
-var LABELS = {
-  all:'Jogos de Hoje', live:'Jogos Ao Vivo',
-  champions:'Champions League', premier:'Premier League',
-  laliga:'La Liga', serie_a:'Serie A', bundesliga:'Bundesliga',
-  ligue1:'Ligue 1', brasileirao:'Brasileirão', libertadores:'Libertadores',
-  saudi:'Saudi Pro League', nba:'NBA'
+/* ── ESCUDOS INLINE — SVG gerado em JS, zero URLs externas ───
+   Cada time tem: cor primária, cor secundária, iniciais.
+   Resultado: escudo sempre visível, em qualquer rede ou offline. */
+var TEAM_STYLE = {
+  /* FUTEBOL — Europa */
+  'Real Madrid':     {bg:'#ffffff',fg:'#00529f',b:'#00529f',t:'RM'},
+  'Barcelona':       {bg:'#a50044',fg:'#004d98',b:'#edbb00',t:'FCB'},
+  'Man City':        {bg:'#6cabdd',fg:'#ffffff',b:'#1c2c5b',t:'MC'},
+  'Bayern München':  {bg:'#dc052d',fg:'#ffffff',b:'#0066b2',t:'FCB'},
+  'PSG':             {bg:'#004170',fg:'#ffffff',b:'#da291c',t:'PSG'},
+  'Liverpool':       {bg:'#c8102e',fg:'#ffffff',b:'#f6eb61',t:'LFC'},
+  'Dortmund':        {bg:'#fde100',fg:'#000000',b:'#000000',t:'BVB'},
+  'Inter':           {bg:'#010e80',fg:'#ffffff',b:'#000000',t:'INT'},
+  'AC Milan':        {bg:'#fb090b',fg:'#000000',b:'#000000',t:'ACM'},
+  'Atletico Madrid': {bg:'#cb3524',fg:'#ffffff',b:'#272560',t:'ATM'},
+  'Arsenal':         {bg:'#ef0107',fg:'#ffffff',b:'#063672',t:'AFC'},
+  'Chelsea':         {bg:'#034694',fg:'#ffffff',b:'#034694',t:'CFC'},
+  'Porto':           {bg:'#003da5',fg:'#ffffff',b:'#ffd700',t:'FCP'},
+  /* FUTEBOL — Premier */
+  'Man United':      {bg:'#da291c',fg:'#ffffff',b:'#fbe122',t:'MU'},
+  'Tottenham':       {bg:'#132257',fg:'#ffffff',b:'#132257',t:'THF'},
+  'Newcastle':       {bg:'#241f20',fg:'#ffffff',b:'#241f20',t:'NUF'},
+  'Aston Villa':     {bg:'#95bfe5',fg:'#670e36',b:'#670e36',t:'AV'},
+  'Brighton':        {bg:'#0057b8',fg:'#ffffff',b:'#ffd700',t:'BHA'},
+  'West Ham':        {bg:'#7a263a',fg:'#ffffff',b:'#1bb1e7',t:'WHU'},
+  /* FUTEBOL — La Liga */
+  'Atletico':        {bg:'#cb3524',fg:'#ffffff',b:'#272560',t:'ATM'},
+  'Sevilla':         {bg:'#d91a21',fg:'#ffffff',b:'#d91a21',t:'SEV'},
+  'Valencia':        {bg:'#ff7900',fg:'#000000',b:'#000000',t:'VCF'},
+  'Athletic Bilbao': {bg:'#ee2523',fg:'#ffffff',b:'#ffffff',t:'ATH'},
+  'Real Sociedad':   {bg:'#0267b0',fg:'#ffffff',b:'#000000',t:'RS'},
+  'Villarreal':      {bg:'#f7d500',fg:'#000000',b:'#004d99',t:'VIL'},
+  /* FUTEBOL — Serie A */
+  'Juventus':        {bg:'#000000',fg:'#ffffff',b:'#000000',t:'JUV'},
+  'Napoli':          {bg:'#12a0c3',fg:'#ffffff',b:'#003087',t:'SSC'},
+  'Roma':            {bg:'#8e1f2f',fg:'#ffd700',b:'#ffd700',t:'ASR'},
+  'Lazio':           {bg:'#87d8f7',fg:'#ffffff',b:'#193f8d',t:'LAZ'},
+  'Atalanta':        {bg:'#1e3799',fg:'#000000',b:'#000000',t:'ATA'},
+  'Fiorentina':      {bg:'#4b0082',fg:'#ffffff',b:'#4b0082',t:'FIO'},
+  /* FUTEBOL — Bundesliga */
+  'Leverkusen':      {bg:'#e32221',fg:'#000000',b:'#000000',t:'B04'},
+  'RB Leipzig':      {bg:'#dd0741',fg:'#ffffff',b:'#ffffff',t:'RBL'},
+  'Stuttgart':       {bg:'#e32221',fg:'#ffffff',b:'#ffffff',t:'VFB'},
+  'Eintracht':       {bg:'#e1000f',fg:'#000000',b:'#000000',t:'SGE'},
+  'Freiburg':        {bg:'#e1000f',fg:'#ffffff',b:'#000000',t:'SCF'},
+  /* FUTEBOL — Ligue 1 */
+  'Monaco':          {bg:'#e8192c',fg:'#ffffff',b:'#ffffff',t:'ASM'},
+  'Marseille':       {bg:'#2faee0',fg:'#ffffff',b:'#009fc3',t:'OM'},
+  'Lyon':            {bg:'#003d8e',fg:'#ffffff',b:'#c8102e',t:'OL'},
+  'Nice':            {bg:'#c8102e',fg:'#ffffff',b:'#000000',t:'OGC'},
+  'Lens':            {bg:'#e9c427',fg:'#c8102e',b:'#c8102e',t:'RC'},
+  'Lille':           {bg:'#c8102e',fg:'#ffffff',b:'#c8102e',t:'LSC'},
+  /* FUTEBOL — Brasileirão */
+  'Flamengo':        {bg:'#e3001b',fg:'#000000',b:'#000000',t:'FLA'},
+  'Palmeiras':       {bg:'#006437',fg:'#ffffff',b:'#006437',t:'PAL'},
+  'Corinthians':     {bg:'#000000',fg:'#ffffff',b:'#000000',t:'COR'},
+  'São Paulo':       {bg:'#e30613',fg:'#ffffff',b:'#ffffff',t:'SPF'},
+  'Fluminense':      {bg:'#6b1d3a',fg:'#ffffff',b:'#00a859',t:'FLU'},
+  'Atlético-MG':     {bg:'#000000',fg:'#ffffff',b:'#000000',t:'GAL'},
+  'Botafogo':        {bg:'#000000',fg:'#ffffff',b:'#000000',t:'BOT'},
+  'Grêmio':          {bg:'#0077c0',fg:'#000000',b:'#000000',t:'GRE'},
+  'Internacional':   {bg:'#d4021d',fg:'#ffffff',b:'#d4021d',t:'INT'},
+  'Santos':          {bg:'#000000',fg:'#ffffff',b:'#000000',t:'SFC'},
+  /* NBA */
+  'Lakers':          {bg:'#552583',fg:'#fdb927',b:'#fdb927',t:'LAL'},
+  'Warriors':        {bg:'#1d428a',fg:'#ffc72c',b:'#ffc72c',t:'GSW'},
+  'Celtics':         {bg:'#007a33',fg:'#ffffff',b:'#ba9653',t:'BOS'},
+  'Bulls':           {bg:'#ce1141',fg:'#000000',b:'#000000',t:'CHI'},
+  'Nets':            {bg:'#000000',fg:'#ffffff',b:'#000000',t:'BKN'},
+  'Heat':            {bg:'#98002e',fg:'#f9a01b',b:'#000000',t:'MIA'},
+  'Knicks':          {bg:'#006bb6',fg:'#f58426',b:'#f58426',t:'NYK'},
+  'Nuggets':         {bg:'#0e2240',fg:'#fec524',b:'#8b2131',t:'DEN'},
+  'Thunder':         {bg:'#007ac1',fg:'#ef3b24',b:'#002d62',t:'OKC'},
+  'Suns':            {bg:'#1d1160',fg:'#e56020',b:'#63717a',t:'PHX'},
+  /* EuroLeague */
+  'CSKA Moscow':     {bg:'#c8102e',fg:'#ffffff',b:'#003087',t:'CSK'},
+  'Olympiacos':      {bg:'#c8102e',fg:'#ffffff',b:'#c8102e',t:'OLY'},
+  'Real Madrid B':   {bg:'#ffffff',fg:'#00529f',b:'#00529f',t:'RM'},
+  'Fenerbahçe':      {bg:'#003d8e',fg:'#ffd700',b:'#ffd700',t:'FB'},
+  'Panathinaikos':   {bg:'#006400',fg:'#ffffff',b:'#006400',t:'PAO'},
+  'Anadolu Efes':    {bg:'#1f3a8f',fg:'#e8c200',b:'#e8c200',t:'EFS'}
 };
 
-/* ═══════════════════════════════════════════════════════════════
-   CACHE EM MEMÓRIA — 5 minutos
-═══════════════════════════════════════════════════════════════ */
-var cache    = {};
-var CACHE_TTL = 5 * 60 * 1000;
-
-function cacheGet(key) {
-  var e = cache[key];
-  if (!e) return null;
-  if (Date.now() - e.ts > CACHE_TTL) { delete cache[key]; return null; }
-  return e.data;
-}
-function cacheSet(key, data) { cache[key] = { ts: Date.now(), data: data }; }
-
-/* ═══════════════════════════════════════════════════════════════
-   FETCH
-═══════════════════════════════════════════════════════════════ */
-async function apiFetch(path) {
-  var url = API_BASE + path;
-  if (USE_PROXY) {
-    var sep = path.indexOf('?') >= 0 ? '&' : '?';
-    url = PROXY + encodeURIComponent(url + sep + 'x-apisports-key=' + API_KEY);
-    var r = await fetch(url, { mode: 'cors' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.json();
-  }
-  var r = await fetch(url, {
-    mode: 'cors',
-    headers: { 'x-apisports-key': API_KEY, 'Accept': 'application/json' }
-  });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return await r.json();
+/* Gera SVG de escudo inline — nunca falha */
+function makeShield(name, size){
+  size = size || 44;
+  var s = TEAM_STYLE[name] || {bg:'#1a1a2e',fg:'#ffffff',b:'#444',t:(name||'?').slice(0,3).toUpperCase()};
+  var r  = Math.round(size * 0.12);
+  var cx = size / 2;
+  /* Texto: tamanho adaptado ao número de letras */
+  var fs = s.t.length <= 2 ? Math.round(size * 0.36)
+         : s.t.length === 3 ? Math.round(size * 0.28)
+         : Math.round(size * 0.22);
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'
+    + '<rect width="'+size+'" height="'+size+'" rx="'+r+'" fill="'+s.bg+'"/>'
+    + '<rect x="0" y="'+(size*0.78)+'" width="'+size+'" height="'+(size*0.22)+'" rx="0" fill="'+s.b+'" opacity="0.55"/>'
+    + '<rect x="0" y="'+(size*0.78)+'" width="'+size+'" height="'+r+'" fill="'+s.b+'" opacity="0.55"/>'
+    + '<rect x="0" y="'+(size-r)+'" width="'+size+'" height="'+r+'" rx="'+r+'" fill="'+s.b+'" opacity="0.55"/>'
+    + '<text x="'+cx+'" y="'+(size*0.58)+'" text-anchor="middle" dominant-baseline="middle"'
+    + ' font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="'+fs+'" fill="'+s.fg+'" letter-spacing="-1">'+s.t+'</text>'
+    + '</svg>';
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   NORMALIZAÇÃO — fixture API-Football → formato interno
-═══════════════════════════════════════════════════════════════ */
-function todayStr() {
-  var d = new Date();
-  return d.getFullYear() + '-'
-    + String(d.getMonth() + 1).padStart(2,'0') + '-'
-    + String(d.getDate()).padStart(2,'0');
+function logo(name){ return makeShield(name, 44); }
+
+function crestHtml(team){
+  var src = makeShield(team.name, 44);
+  return '<div class="mc-crest"><img src="'+src+'" alt="'+team.name+'" width="44" height="44"/></div>';
 }
 
-function normalizeFixture(fix) {
-  var s = fix.fixture.status.short;
-  var status;
-  if (['1H','2H','ET','P','BT','HT','LIVE'].indexOf(s) >= 0) status = 'live';
-  else if (['FT','AET','PEN','CANC','PST','ABD','AWD','WO'].indexOf(s) >= 0) status = 'ft';
-  else status = 'soon';
+function drCrestHtml(team){
+  var src = makeShield(team.name, 60);
+  return '<div class="dr-crest"><img src="'+src+'" alt="'+team.name+'" width="60" height="60"/></div>';
+}
 
-  var elapsed = fix.fixture.status.elapsed;
-  var min;
-  if (status === 'live')       min = s === 'HT' ? 'HT' : (elapsed || '?') + "'";
-  else if (status === 'ft')    min = 'FT';
-  else {
-    try {
-      var d = new Date(fix.fixture.date);
-      min = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-    } catch(e) { min = '--:--'; }
-  }
+/* ── ESCALAÇÕES MOCK ───────────────────────────────────────── */
+var LINEUPS = {
+  'Real Madrid': [
+    {n:1,name:'Courtois',pos:'GK'},{n:2,name:'Carvajal',pos:'LD'},
+    {n:3,name:'Militão',pos:'ZD'},{n:4,name:'Alaba',pos:'ZE'},
+    {n:5,name:'Mendy',pos:'LE'},{n:6,name:'Tchouameni',pos:'VOL'},
+    {n:7,name:'Valverde',pos:'MC'},{n:8,name:'Kroos',pos:'MC'},
+    {n:9,name:'Bellingham',pos:'MEA'},{n:10,name:'Rodrygo',pos:'PD'},
+    {n:11,name:'Vinicius Jr',pos:'PE'}],
+  'Barcelona': [
+    {n:1,name:'Ter Stegen',pos:'GK'},{n:23,name:'Koundé',pos:'LD'},
+    {n:15,name:'Araujo',pos:'ZD'},{n:4,name:'Christensen',pos:'ZE'},
+    {n:3,name:'Balde',pos:'LE'},{n:5,name:'De Jong',pos:'VOL'},
+    {n:8,name:'Pedri',pos:'MC'},{n:6,name:'Gavi',pos:'MC'},
+    {n:7,name:'Torres',pos:'PD'},{n:9,name:'Lewandowski',pos:'CA'},
+    {n:11,name:'Raphinha',pos:'PE'}],
+  'Man City': [
+    {n:31,name:'Ederson',pos:'GK'},{n:2,name:'Walker',pos:'LD'},
+    {n:3,name:'Rúben Dias',pos:'ZD'},{n:14,name:'Akanji',pos:'ZE'},
+    {n:6,name:'Gvardiol',pos:'LE'},{n:16,name:'Rodri',pos:'VOL'},
+    {n:8,name:'Kovacic',pos:'MC'},{n:20,name:'Bernardo',pos:'MC'},
+    {n:26,name:'Doku',pos:'PD'},{n:9,name:'Haaland',pos:'CA'},
+    {n:10,name:'Grealish',pos:'PE'}],
+  'Bayern München': [
+    {n:1,name:'Neuer',pos:'GK'},{n:25,name:'Müller',pos:'LD'},
+    {n:4,name:'Upamecano',pos:'ZD'},{n:5,name:'De Ligt',pos:'ZE'},
+    {n:19,name:'Davies',pos:'LE'},{n:6,name:'Kimmich',pos:'VOL'},
+    {n:7,name:'Gnabry',pos:'MC'},{n:42,name:'Tel',pos:'MC'},
+    {n:10,name:'Sané',pos:'PD'},{n:9,name:'Kane',pos:'CA'},
+    {n:11,name:'Coman',pos:'PE'}],
+  'PSG': [
+    {n:1,name:'Donnarumma',pos:'GK'},{n:2,name:'Hakimi',pos:'LD'},
+    {n:5,name:'Marquinhos',pos:'ZD'},{n:3,name:'Skriniar',pos:'ZE'},
+    {n:23,name:'Nuno Mendes',pos:'LE'},{n:8,name:'Fabian Ruiz',pos:'VOL'},
+    {n:6,name:'Zaire-Emery',pos:'MC'},{n:11,name:'Dembélé',pos:'PD'},
+    {n:7,name:'Mbappé',pos:'CA'},{n:9,name:'Gonçalo Ramos',pos:'SA'},
+    {n:10,name:'Lee Kang-in',pos:'PE'}],
+  'Liverpool': [
+    {n:1,name:'Alisson',pos:'GK'},{n:66,name:'Alexander-Arnold',pos:'LD'},
+    {n:4,name:'Van Dijk',pos:'ZD'},{n:32,name:'Matip',pos:'ZE'},
+    {n:26,name:'Robertson',pos:'LE'},{n:6,name:'Thiago',pos:'VOL'},
+    {n:3,name:'Henderson',pos:'MC'},{n:14,name:'Jones',pos:'MC'},
+    {n:20,name:'Diogo Jota',pos:'PD'},{n:9,name:'Firmino',pos:'CA'},
+    {n:11,name:'Salah',pos:'PE'}],
+  'Dortmund': [
+    {n:1,name:'Kobel',pos:'GK'},{n:26,name:'Ryerson',pos:'LD'},
+    {n:4,name:'Schlotterbeck',pos:'ZD'},{n:25,name:'Hummels',pos:'ZE'},
+    {n:28,name:'Maatsen',pos:'LE'},{n:6,name:'Can',pos:'VOL'},
+    {n:19,name:'Brandt',pos:'MC'},{n:10,name:'Reus',pos:'MC'},
+    {n:7,name:'Adeyemi',pos:'PD'},{n:14,name:'Füllkrug',pos:'CA'},
+    {n:22,name:'Malen',pos:'PE'}],
+  'Inter': [
+    {n:1,name:'Sommer',pos:'GK'},{n:36,name:'Darmian',pos:'LD'},
+    {n:6,name:'De Vrij',pos:'ZD'},{n:15,name:'Acerbi',pos:'ZE'},
+    {n:32,name:'Dimarco',pos:'LE'},{n:23,name:'Barella',pos:'VOL'},
+    {n:20,name:'Calhanoglu',pos:'MC'},{n:22,name:'Mkhitaryan',pos:'MC'},
+    {n:10,name:'Lautaro',pos:'CA'},{n:9,name:'Thuram',pos:'CA2'},
+    {n:14,name:'Asllani',pos:'ME'}],
+  'Juventus': [
+    {n:1,name:'Szczesny',pos:'GK'},{n:2,name:'Danilo',pos:'LD'},
+    {n:3,name:'Bremer',pos:'ZD'},{n:4,name:'Gatti',pos:'ZE'},
+    {n:12,name:'Cambiaso',pos:'LE'},{n:5,name:'Locatelli',pos:'VOL'},
+    {n:25,name:'Rabiot',pos:'MC'},{n:10,name:'Pogba',pos:'MC'},
+    {n:22,name:'Weah',pos:'PD'},{n:9,name:'Vlahovic',pos:'CA'},
+    {n:11,name:'Chiesa',pos:'PE'}],
+  'AC Milan': [
+    {n:16,name:'Maignan',pos:'GK'},{n:2,name:'Calabria',pos:'LD'},
+    {n:23,name:'Tomori',pos:'ZD'},{n:5,name:'Thiaw',pos:'ZE'},
+    {n:19,name:'Theo Hernandez',pos:'LE'},{n:8,name:'Tonali',pos:'VOL'},
+    {n:4,name:'Bennacer',pos:'MC'},{n:7,name:'Adli',pos:'MC'},
+    {n:17,name:'Leão',pos:'PE'},{n:11,name:'Giroud',pos:'CA'},
+    {n:10,name:'Brahim Díaz',pos:'MEA'}],
+  'Arsenal': [
+    {n:1,name:'Raya',pos:'GK'},{n:4,name:'White',pos:'LD'},
+    {n:12,name:'Saliba',pos:'ZD'},{n:6,name:'Gabriel',pos:'ZE'},
+    {n:35,name:'Zinchenko',pos:'LE'},{n:29,name:'Havertz',pos:'VOL'},
+    {n:41,name:'Rice',pos:'MC'},{n:8,name:'Ødegaard',pos:'MC'},
+    {n:7,name:'Saka',pos:'PD'},{n:9,name:'Jesus',pos:'CA'},
+    {n:11,name:'Martinelli',pos:'PE'}],
+  'Chelsea': [
+    {n:1,name:'Sánchez',pos:'GK'},{n:2,name:'James',pos:'LD'},
+    {n:6,name:'Thiago Silva',pos:'ZD'},{n:26,name:'Colwill',pos:'ZE'},
+    {n:3,name:'Cucurella',pos:'LE'},{n:5,name:'Chalobah',pos:'VOL'},
+    {n:7,name:'Gallagher',pos:'MC'},{n:10,name:'Enzo',pos:'MC'},
+    {n:11,name:'Nkunku',pos:'PD'},{n:9,name:'Jackson',pos:'CA'},
+    {n:20,name:'Palmer',pos:'PE'}],
+  'Atletico Madrid': [
+    {n:13,name:'Oblak',pos:'GK'},{n:2,name:'Molina',pos:'LD'},
+    {n:3,name:'Savic',pos:'ZD'},{n:23,name:'Witsel',pos:'ZE'},
+    {n:18,name:'Llorente',pos:'LE'},{n:5,name:'De Paul',pos:'VOL'},
+    {n:14,name:'Marcos Llorente',pos:'MC'},{n:8,name:'Saúl',pos:'MC'},
+    {n:10,name:'Griezmann',pos:'MEA'},{n:9,name:'Morata',pos:'CA'},
+    {n:7,name:'Correa',pos:'SA'}],
+  'Napoli': [
+    {n:1,name:'Meret',pos:'GK'},{n:22,name:'Di Lorenzo',pos:'LD'},
+    {n:55,name:'Rrahmani',pos:'ZD'},{n:13,name:'Juan Jesus',pos:'ZE'},
+    {n:6,name:'Olivera',pos:'LE'},{n:68,name:'Lobotka',pos:'VOL'},
+    {n:7,name:'Zielinski',pos:'MC'},{n:5,name:'Anguissa',pos:'MC'},
+    {n:21,name:'Politano',pos:'PD'},{n:11,name:'Raspadori',pos:'CA'},
+    {n:77,name:'Kvaratskhelia',pos:'PE'}],
+  'Flamengo': [
+    {n:1,name:'Rossi',pos:'GK'},{n:2,name:'Varela',pos:'LD'},
+    {n:4,name:'Léo Ortiz',pos:'ZD'},{n:3,name:'Léo Pereira',pos:'ZE'},
+    {n:6,name:'Viña',pos:'LE'},{n:5,name:'Pulgar',pos:'VOL'},
+    {n:8,name:'De Arrascaeta',pos:'MC'},{n:16,name:'Gerson',pos:'MC'},
+    {n:7,name:'Everton Cebolinha',pos:'PD'},{n:9,name:'Pedro',pos:'CA'},
+    {n:11,name:'Bruno Henrique',pos:'PE'}],
+  'Palmeiras': [
+    {n:1,name:'Weverton',pos:'GK'},{n:2,name:'Marcos Rocha',pos:'LD'},
+    {n:3,name:'Gustavo Gómez',pos:'ZD'},{n:4,name:'Murilo',pos:'ZE'},
+    {n:6,name:'Piquerez',pos:'LE'},{n:5,name:'Aníbal Moreno',pos:'VOL'},
+    {n:8,name:'Raphael Veiga',pos:'MC'},{n:10,name:'Rony',pos:'MC'},
+    {n:7,name:'Estêvão',pos:'PD'},{n:9,name:'Flaco López',pos:'CA'},
+    {n:11,name:'Lázaro',pos:'PE'}],
+  'Corinthians': [
+    {n:1,name:'Cássio',pos:'GK'},{n:2,name:'Fagner',pos:'LD'},
+    {n:5,name:'Gil',pos:'ZD'},{n:3,name:'Balbuena',pos:'ZE'},
+    {n:6,name:'Fábio Santos',pos:'LE'},{n:8,name:'Fausto Vera',pos:'VOL'},
+    {n:4,name:'Maycon',pos:'MC'},{n:10,name:'Renato Augusto',pos:'MC'},
+    {n:7,name:'Romero',pos:'PD'},{n:9,name:'Yuri Alberto',pos:'CA'},
+    {n:11,name:'Mateus Vital',pos:'PE'}],
+  /* NBA (5 titulares) */
+  'Lakers': [
+    {n:23,name:'LeBron James',pos:'SF'},{n:3,name:'Anthony Davis',pos:'PF'},
+    {n:1,name:"D'Angelo Russell",pos:'PG'},{n:5,name:'Austin Reaves',pos:'SG'},
+    {n:8,name:'Jarred Vanderbilt',pos:'C'}],
+  'Warriors': [
+    {n:30,name:'Stephen Curry',pos:'PG'},{n:11,name:'Klay Thompson',pos:'SG'},
+    {n:23,name:'Draymond Green',pos:'PF'},{n:5,name:'Kevon Looney',pos:'C'},
+    {n:0,name:'Jonathan Kuminga',pos:'SF'}],
+  'Celtics': [
+    {n:0,name:'Jayson Tatum',pos:'SF'},{n:7,name:'Jaylen Brown',pos:'SG'},
+    {n:11,name:'Payton Pritchard',pos:'PG'},{n:8,name:'Kristaps Porzingis',pos:'C'},
+    {n:13,name:'Malcolm Brogdon',pos:'G'}],
+  'Bulls': [
+    {n:11,name:'DeMar DeRozan',pos:'SG'},{n:0,name:'Coby White',pos:'PG'},
+    {n:7,name:'Patrick Williams',pos:'SF'},{n:6,name:'Nikola Vucevic',pos:'C'},
+    {n:12,name:'Ayo Dosunmu',pos:'G'}],
+  'Nets': [
+    {n:10,name:'Ben Simmons',pos:'PG'},{n:1,name:'Mikal Bridges',pos:'SF'},
+    {n:0,name:'Cam Thomas',pos:'SG'},{n:5,name:'Nic Claxton',pos:'C'},
+    {n:2,name:"Day'Ron Sharpe",pos:'PF'}],
+  'Heat': [
+    {n:22,name:'Jimmy Butler',pos:'SF'},{n:14,name:'Tyler Herro',pos:'SG'},
+    {n:5,name:'Nikola Jovic',pos:'PF'},{n:15,name:'Thomas Bryant',pos:'C'},
+    {n:3,name:'Kyle Lowry',pos:'PG'}],
+  'Knicks': [
+    {n:9,name:'RJ Barrett',pos:'SF'},{n:11,name:'Jalen Brunson',pos:'PG'},
+    {n:0,name:'Josh Hart',pos:'G'},{n:13,name:'Evan Fournier',pos:'SG'},
+    {n:32,name:'Karl-Anthony Towns',pos:'C'}],
+  'Nuggets': [
+    {n:15,name:'Nikola Jokic',pos:'C'},{n:27,name:'Jamal Murray',pos:'PG'},
+    {n:5,name:'Michael Porter Jr',pos:'SF'},{n:12,name:'Kentavious Pope',pos:'SG'},
+    {n:24,name:'Reggie Jackson',pos:'G'}],
+  'Thunder': [
+    {n:2,name:'Shai Gilgeous-Alexander',pos:'PG'},{n:5,name:'Luguentz Dort',pos:'SG'},
+    {n:0,name:'Josh Giddey',pos:'SF'},{n:12,name:'Darius Bazley',pos:'PF'},
+    {n:45,name:'Isaiah Joe',pos:'G'}],
+  'Suns': [
+    {n:1,name:'Devin Booker',pos:'SG'},{n:3,name:'Chris Paul',pos:'PG'},
+    {n:35,name:'Kevin Durant',pos:'SF'},{n:6,name:'Bradley Beal',pos:'G'},
+    {n:14,name:'Jusuf Nurkic',pos:'C'}],
+  /* EuroLeague */
+  'CSKA Moscow':   [{n:1,name:'Sergio Rodríguez',pos:'PG'},{n:5,name:'Will Clyburn',pos:'SF'},{n:33,name:'Kyle Hines',pos:'C'},{n:10,name:'Mike James',pos:'PG'},{n:6,name:'Janis Timma',pos:'SG'}],
+  'Olympiacos':    [{n:7,name:'Moustapha Fall',pos:'C'},{n:1,name:'Nigel Williams-Goss',pos:'PG'},{n:5,name:'Tyler Dorsey',pos:'SG'},{n:8,name:'Kostas Papanikolaou',pos:'SF'},{n:13,name:'Giannoulis Larentzakis',pos:'G'}],
+  'Fenerbahçe':    [{n:0,name:'Nando De Colo',pos:'G'},{n:10,name:'Scottie Wilbekin',pos:'PG'},{n:3,name:'Jan Vesely',pos:'C'},{n:12,name:'Marko Guduric',pos:'SG'},{n:7,name:'De Colo',pos:'SF'}],
+  'Panathinaikos': [{n:4,name:'Kostas Sloukas',pos:'PG'},{n:15,name:'Ioannis Papapetrou',pos:'SF'},{n:5,name:'Thomas Walkup',pos:'G'},{n:0,name:'Gikas Voigtmann',pos:'C'},{n:11,name:'Howard Sant-Roos',pos:'SG'}],
+  'Anadolu Efes':  [{n:1,name:'Vasilije Micic',pos:'PG'},{n:4,name:'Shane Larkin',pos:'G'},{n:88,name:'Bryant Dunston',pos:'C'},{n:6,name:'Chris Singleton',pos:'SF'},{n:7,name:'Rodrigue Beaubois',pos:'SG'}]
+};
 
-  var g = fix.goals || {};
-  var dateFmt = '';
-  try {
-    var dd = new Date(fix.fixture.date);
-    dateFmt = String(dd.getDate()).padStart(2,'0') + '/'
-            + String(dd.getMonth()+1).padStart(2,'0') + '/'
-            + dd.getFullYear();
-  } catch(e) {}
+function getLineup(name){
+  return LINEUPS[name] || [{n:1,name:'Jogador 1',pos:'—'},{n:2,name:'Jogador 2',pos:'—'},{n:3,name:'Jogador 3',pos:'—'},{n:4,name:'Jogador 4',pos:'—'},{n:5,name:'Jogador 5',pos:'—'}];
+}
 
+/* ── GERADOR DE JOGOS ──────────────────────────────────────── */
+var _id = 1;
+function mkDate(daysOffset, hour, min){
+  var d = new Date(); d.setDate(d.getDate() + daysOffset);
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  var yyyy = d.getFullYear();
+  var hStr = String(hour).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+  return { date: dd+'/'+mm+'/'+yyyy, time: hStr };
+}
+function pick(arr,i){ return arr[i % arr.length]; }
+
+function makeMatch(filter, league, phase, home, away, status, scoreH, scoreA, venue, dOffset, hour, min){
+  var dt = mkDate(dOffset, hour, min);
+  var mStatus = status;
+  var mMin = status==='live' ? (Math.floor(Math.random()*45+1)+"'") : status==='ft' ? 'FT' : dt.time;
   return {
-    id:     'af_' + fix.fixture.id,
-    apiId:  fix.fixture.id,
-    league: fix.league.name || '',
-    phase:  fix.league.round || '',
-    season: String(fix.league.season || ''),
-    home: { name: fix.teams.home.name || '', logo: fix.teams.home.logo || '' },
-    away: { name: fix.teams.away.name || '', logo: fix.teams.away.logo || '' },
-    status: status,
-    min:    min,
-    score: {
-      h: (status !== 'soon' && g.home !== null && g.home !== undefined) ? g.home : 0,
-      a: (status !== 'soon' && g.away !== null && g.away !== undefined) ? g.away : 0
-    },
-    venue:  (fix.fixture.venue && fix.fixture.venue.name)
-              ? fix.fixture.venue.name + (fix.fixture.venue.city ? ', ' + fix.fixture.venue.city : '')
-              : '—',
-    city:   (fix.fixture.venue && fix.fixture.venue.city) ? fix.fixture.venue.city : '',
-    date:   dateFmt,
-    time:   min
+    id: 'm'+(++_id), filter: filter, league: league, phase: phase,
+    home: { name: home, logo: logo(home) },
+    away: { name: away, logo: logo(away) },
+    status: mStatus, min: mMin,
+    score: { h: scoreH, a: scoreA },
+    venue: venue, city: '', date: dt.date, time: dt.time,
+    season: '2024-25',
+    lineup: { home: getLineup(home), away: getLineup(away) }
   };
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CARREGADORES
-═══════════════════════════════════════════════════════════════ */
+/* ── DADOS MOCK POR LIGA ───────────────────────────────────── */
+var MOCK = {};
 
-/* Jogos do dia */
-async function loadToday() {
-  var today = todayStr();
-  var key   = 'today_' + today;
-  var hit   = cacheGet(key); if (hit) return hit;
-  var data  = await apiFetch('/fixtures?date=' + today);
-  var list  = (data.response || []).map(normalizeFixture);
-  cacheSet(key, list);
-  return list;
-}
+/* CHAMPIONS LEAGUE */
+MOCK.champions = [
+  makeMatch('champions','Champions League','Oitavas — Ida','Real Madrid','Man City','ft',3,1,'Santiago Bernabéu',-7,21,0),
+  makeMatch('champions','Champions League','Oitavas — Ida','Bayern München','Arsenal','ft',2,0,'Allianz Arena',-7,21,0),
+  makeMatch('champions','Champions League','Oitavas — Ida','Barcelona','PSG','ft',1,1,'Estadi Olímpic',-6,21,0),
+  makeMatch('champions','Champions League','Oitavas — Ida','Liverpool','Dortmund','ft',2,1,'Anfield',-6,21,0),
+  makeMatch('champions','Champions League','Oitavas — Ida','Inter','Atletico Madrid','ft',0,0,'Giuseppe Meazza',-5,21,0),
+  makeMatch('champions','Champions League','Oitavas — Ida','Chelsea','Juventus','ft',1,0,'Stamford Bridge',-5,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','Man City','Real Madrid','live',1,2,'Etihad Stadium',0,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','Arsenal','Bayern München','live',0,1,'Emirates Stadium',0,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','PSG','Barcelona','soon',0,0,'Parc des Princes',1,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','Dortmund','Liverpool','soon',0,0,'Signal Iduna Park',1,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','Atletico Madrid','Inter','soon',0,0,'Cívitas Metropolitano',2,21,0),
+  makeMatch('champions','Champions League','Oitavas — Volta','Juventus','Chelsea','soon',0,0,'Allianz Stadium',2,21,0),
+  makeMatch('champions','Champions League','Quartas — Ida','Real Madrid','Bayern München','soon',0,0,'Santiago Bernabéu',8,21,0),
+  makeMatch('champions','Champions League','Quartas — Ida','Man City','Liverpool','soon',0,0,'Etihad Stadium',8,21,0),
+  makeMatch('champions','Champions League','Quartas — Ida','Barcelona','Arsenal','soon',0,0,'Estadi Olímpic',9,21,0),
+  makeMatch('champions','Champions League','Quartas — Ida','PSG','Inter','soon',0,0,'Parc des Princes',9,21,0),
+  makeMatch('champions','Champions League','Quartas — Volta','Bayern München','Real Madrid','soon',0,0,'Allianz Arena',15,21,0),
+  makeMatch('champions','Champions League','Quartas — Volta','Liverpool','Man City','soon',0,0,'Anfield',15,21,0),
+  makeMatch('champions','Champions League','Quartas — Volta','Arsenal','Barcelona','soon',0,0,'Emirates Stadium',16,21,0),
+  makeMatch('champions','Champions League','Quartas — Volta','Inter','PSG','soon',0,0,'Giuseppe Meazza',16,21,0),
+  makeMatch('champions','Champions League','Semifinal — Ida','Real Madrid','Barcelona','soon',0,0,'Santiago Bernabéu',29,21,0),
+  makeMatch('champions','Champions League','Semifinal — Ida','Man City','Inter','soon',0,0,'Etihad Stadium',29,21,0),
+  makeMatch('champions','Champions League','Semifinal — Volta','Barcelona','Real Madrid','soon',0,0,'Estadi Olímpic',36,21,0),
+  makeMatch('champions','Champions League','Semifinal — Volta','Inter','Man City','soon',0,0,'Giuseppe Meazza',36,21,0),
+  makeMatch('champions','Champions League','Final','Real Madrid','Inter','soon',0,0,'Wembley, Londres',60,21,0),
+  /* Extra jogos fase de grupos já encerrados */
+  makeMatch('champions','Champions League','Grupos — Rod. 6','Arsenal','PSG','ft',1,0,'Emirates Stadium',-21,21,0),
+  makeMatch('champions','Champions League','Grupos — Rod. 6','Dortmund','AC Milan','ft',3,0,'Signal Iduna Park',-21,21,0),
+  makeMatch('champions','Champions League','Grupos — Rod. 5','Real Madrid','Napoli','ft',4,2,'Santiago Bernabéu',-35,21,0),
+  makeMatch('champions','Champions League','Grupos — Rod. 5','Man City','Dortmund','ft',1,0,'Etihad Stadium',-35,21,0),
+  makeMatch('champions','Champions League','Grupos — Rod. 4','Barcelona','Porto','ft',2,1,'Estadi Olímpic',-49,21,0)
+];
 
-/* Jogos ao vivo */
-async function loadLive() {
-  var key = 'live_short';
-  var hit = cacheGet(key); if (hit) return hit;
-  var data = await apiFetch('/fixtures?live=all');
-  var list = (data.response || []).map(normalizeFixture);
-  /* TTL curto: 30s */
-  cache[key] = { ts: Date.now() - (CACHE_TTL - 30000), data: list };
-  return list;
-}
+/* PREMIER LEAGUE */
+MOCK.premier = [
+  makeMatch('premier','Premier League','Rodada 28','Arsenal','Chelsea','ft',2,1,'Emirates Stadium',-6,17,30),
+  makeMatch('premier','Premier League','Rodada 28','Man City','Aston Villa','ft',3,0,'Etihad Stadium',-6,20,0),
+  makeMatch('premier','Premier League','Rodada 28','Liverpool','Man United','ft',2,0,'Anfield',-6,14,0),
+  makeMatch('premier','Premier League','Rodada 28','Tottenham','Newcastle','ft',1,1,'Tottenham Hotspur Stadium',-6,15,0),
+  makeMatch('premier','Premier League','Rodada 28','Brighton','West Ham','ft',0,2,'Amex Stadium',-6,15,0),
+  makeMatch('premier','Premier League','Rodada 29','Arsenal','Man City','live',1,1,'Emirates Stadium',0,17,30),
+  makeMatch('premier','Premier League','Rodada 29','Liverpool','Chelsea','live',2,0,'Anfield',0,15,0),
+  makeMatch('premier','Premier League','Rodada 29','Man United','Tottenham','soon',0,0,'Old Trafford',1,20,0),
+  makeMatch('premier','Premier League','Rodada 29','Newcastle','Brighton','soon',0,0,'St James Park',1,15,0),
+  makeMatch('premier','Premier League','Rodada 29','West Ham','Aston Villa','soon',0,0,'London Stadium',1,15,0),
+  makeMatch('premier','Premier League','Rodada 30','Man City','Liverpool','soon',0,0,'Etihad Stadium',7,17,30),
+  makeMatch('premier','Premier League','Rodada 30','Chelsea','Arsenal','soon',0,0,'Stamford Bridge',7,20,0),
+  makeMatch('premier','Premier League','Rodada 30','Tottenham','Man United','soon',0,0,'Tottenham Hotspur Stadium',8,20,0),
+  makeMatch('premier','Premier League','Rodada 30','Aston Villa','Newcastle','soon',0,0,'Villa Park',8,15,0),
+  makeMatch('premier','Premier League','Rodada 30','Brighton','West Ham','soon',0,0,'Amex Stadium',8,15,0),
+  makeMatch('premier','Premier League','Rodada 27','Man United','Arsenal','ft',0,1,'Old Trafford',-13,14,0),
+  makeMatch('premier','Premier League','Rodada 27','Chelsea','Liverpool','ft',1,2,'Stamford Bridge',-13,17,30),
+  makeMatch('premier','Premier League','Rodada 27','Newcastle','Man City','ft',0,3,'St James Park',-13,20,0),
+  makeMatch('premier','Premier League','Rodada 27','Tottenham','Brighton','ft',2,1,'Tottenham Hotspur Stadium',-13,15,0),
+  makeMatch('premier','Premier League','Rodada 27','West Ham','Aston Villa','ft',0,0,'London Stadium',-13,15,0),
+  makeMatch('premier','Premier League','Rodada 26','Arsenal','Liverpool','ft',2,2,'Emirates Stadium',-20,17,30),
+  makeMatch('premier','Premier League','Rodada 26','Man City','Chelsea','ft',1,0,'Etihad Stadium',-20,20,0),
+  makeMatch('premier','Premier League','Rodada 26','Aston Villa','Man United','ft',2,1,'Villa Park',-20,14,0),
+  makeMatch('premier','Premier League','Rodada 26','Brighton','Newcastle','ft',3,1,'Amex Stadium',-20,15,0),
+  makeMatch('premier','Premier League','Rodada 26','West Ham','Tottenham','ft',1,2,'London Stadium',-20,15,0),
+  makeMatch('premier','Premier League','Rodada 31','Liverpool','Man United','soon',0,0,'Anfield',14,17,30),
+  makeMatch('premier','Premier League','Rodada 31','Arsenal','Newcastle','soon',0,0,'Emirates Stadium',14,15,0),
+  makeMatch('premier','Premier League','Rodada 31','Man City','West Ham','soon',0,0,'Etihad Stadium',15,20,0),
+  makeMatch('premier','Premier League','Rodada 31','Chelsea','Tottenham','soon',0,0,'Stamford Bridge',15,15,0),
+  makeMatch('premier','Premier League','Rodada 31','Brighton','Aston Villa','soon',0,0,'Amex Stadium',15,15,0)
+];
 
-/* Liga específica: hoje, com fallback ±7 dias */
-async function loadLeague(leagueId, season) {
-  var today = todayStr();
-  var key   = 'league_' + leagueId + '_' + season + '_' + today;
-  var hit   = cacheGet(key); if (hit) return hit;
+/* LA LIGA */
+MOCK.laliga = [
+  makeMatch('laliga','La Liga','Jornada 27','Real Madrid','Barcelona','ft',3,2,'Santiago Bernabéu',-7,21,0),
+  makeMatch('laliga','La Liga','Jornada 27','Atletico Madrid','Sevilla','ft',2,0,'Cívitas Metropolitano',-7,18,30),
+  makeMatch('laliga','La Liga','Jornada 27','Valencia','Athletic Bilbao','ft',1,1,'Mestalla',-7,20,0),
+  makeMatch('laliga','La Liga','Jornada 27','Villarreal','Real Sociedad','ft',2,1,'Estadio de la Cerámica',-7,16,0),
+  makeMatch('laliga','La Liga','Jornada 28','Barcelona','Atletico Madrid','live',1,0,'Estadi Olímpic',0,21,0),
+  makeMatch('laliga','La Liga','Jornada 28','Real Madrid','Valencia','live',2,1,'Santiago Bernabéu',0,18,30),
+  makeMatch('laliga','La Liga','Jornada 28','Sevilla','Villarreal','soon',0,0,'Estadio Ramón Sánchez-Pizjuán',1,21,0),
+  makeMatch('laliga','La Liga','Jornada 28','Athletic Bilbao','Real Sociedad','soon',0,0,'San Mamés',1,18,30),
+  makeMatch('laliga','La Liga','Jornada 29','Real Madrid','Atletico Madrid','soon',0,0,'Santiago Bernabéu',7,21,0),
+  makeMatch('laliga','La Liga','Jornada 29','Barcelona','Sevilla','soon',0,0,'Estadi Olímpic',7,18,30),
+  makeMatch('laliga','La Liga','Jornada 29','Valencia','Villarreal','soon',0,0,'Mestalla',8,21,0),
+  makeMatch('laliga','La Liga','Jornada 29','Real Sociedad','Athletic Bilbao','soon',0,0,'Reale Arena',8,18,30),
+  makeMatch('laliga','La Liga','Jornada 26','Barcelona','Valencia','ft',4,1,'Estadi Olímpic',-14,21,0),
+  makeMatch('laliga','La Liga','Jornada 26','Atletico Madrid','Real Madrid','ft',1,1,'Cívitas Metropolitano',-14,21,0),
+  makeMatch('laliga','La Liga','Jornada 26','Sevilla','Athletic Bilbao','ft',2,3,'Estadio Ramón Sánchez-Pizjuán',-14,18,30),
+  makeMatch('laliga','La Liga','Jornada 26','Villarreal','Valencia','ft',1,0,'Estadio de la Cerámica',-14,16,0),
+  makeMatch('laliga','La Liga','Jornada 25','Real Madrid','Villarreal','ft',2,0,'Santiago Bernabéu',-21,21,0),
+  makeMatch('laliga','La Liga','Jornada 25','Barcelona','Athletic Bilbao','ft',1,0,'Estadi Olímpic',-21,18,30),
+  makeMatch('laliga','La Liga','Jornada 25','Atletico Madrid','Real Sociedad','ft',3,1,'Cívitas Metropolitano',-21,21,0),
+  makeMatch('laliga','La Liga','Jornada 25','Sevilla','Valencia','ft',2,1,'Estadio Ramón Sánchez-Pizjuán',-21,18,30),
+  makeMatch('laliga','La Liga','Jornada 30','Real Madrid','Sevilla','soon',0,0,'Santiago Bernabéu',14,21,0),
+  makeMatch('laliga','La Liga','Jornada 30','Barcelona','Villarreal','soon',0,0,'Estadi Olímpic',14,18,30),
+  makeMatch('laliga','La Liga','Jornada 30','Atletico Madrid','Valencia','soon',0,0,'Cívitas Metropolitano',15,21,0),
+  makeMatch('laliga','La Liga','Jornada 30','Athletic Bilbao','Real Sociedad','soon',0,0,'San Mamés',15,18,30),
+  makeMatch('laliga','La Liga','Jornada 31','Real Madrid','Athletic Bilbao','soon',0,0,'Santiago Bernabéu',21,21,0),
+  makeMatch('laliga','La Liga','Jornada 31','Barcelona','Real Sociedad','soon',0,0,'Estadi Olímpic',21,18,30),
+  makeMatch('laliga','La Liga','Jornada 31','Atletico Madrid','Sevilla','soon',0,0,'Cívitas Metropolitano',22,21,0),
+  makeMatch('laliga','La Liga','Jornada 31','Villarreal','Valencia','soon',0,0,'Estadio de la Cerámica',22,18,30),
+  makeMatch('laliga','La Liga','Jornada 32','Real Madrid','Real Sociedad','soon',0,0,'Santiago Bernabéu',28,21,0),
+  makeMatch('laliga','La Liga','Jornada 32','Barcelona','Atletico Madrid','soon',0,0,'Estadi Olímpic',28,21,0)
+];
 
-  /* Tenta dia exato primeiro */
-  var data = await apiFetch('/fixtures?league=' + leagueId + '&season=' + season + '&date=' + today);
-  var list = (data.response || []).map(normalizeFixture);
+/* SERIE A */
+MOCK.serie_a = [
+  makeMatch('serie_a','Serie A','Rodada 27','Inter','Napoli','ft',2,1,'Giuseppe Meazza',-6,20,45),
+  makeMatch('serie_a','Serie A','Rodada 27','Juventus','AC Milan','ft',1,1,'Allianz Stadium',-6,20,45),
+  makeMatch('serie_a','Serie A','Rodada 27','Roma','Lazio','ft',2,0,'Olimpico, Roma',-7,20,45),
+  makeMatch('serie_a','Serie A','Rodada 27','Atalanta','Fiorentina','ft',3,1,'Gewiss Stadium',-7,18,0),
+  makeMatch('serie_a','Serie A','Rodada 28','Inter','Juventus','live',1,0,'Giuseppe Meazza',0,20,45),
+  makeMatch('serie_a','Serie A','Rodada 28','AC Milan','Napoli','live',0,1,'San Siro',0,20,45),
+  makeMatch('serie_a','Serie A','Rodada 28','Lazio','Roma','soon',0,0,'Olimpico, Roma',1,20,45),
+  makeMatch('serie_a','Serie A','Rodada 28','Fiorentina','Atalanta','soon',0,0,'Stadio Artemio Franchi',1,18,0),
+  makeMatch('serie_a','Serie A','Rodada 29','Napoli','Inter','soon',0,0,'Diego Armando Maradona',7,20,45),
+  makeMatch('serie_a','Serie A','Rodada 29','AC Milan','Juventus','soon',0,0,'San Siro',7,20,45),
+  makeMatch('serie_a','Serie A','Rodada 29','Roma','Atalanta','soon',0,0,'Olimpico, Roma',8,20,45),
+  makeMatch('serie_a','Serie A','Rodada 29','Lazio','Fiorentina','soon',0,0,'Olimpico, Roma',8,18,0),
+  makeMatch('serie_a','Serie A','Rodada 26','Napoli','Juventus','ft',1,2,'Diego Armando Maradona',-13,20,45),
+  makeMatch('serie_a','Serie A','Rodada 26','AC Milan','Roma','ft',2,2,'San Siro',-13,20,45),
+  makeMatch('serie_a','Serie A','Rodada 26','Inter','Lazio','ft',3,0,'Giuseppe Meazza',-14,20,45),
+  makeMatch('serie_a','Serie A','Rodada 26','Atalanta','Fiorentina','ft',1,0,'Gewiss Stadium',-14,18,0),
+  makeMatch('serie_a','Serie A','Rodada 25','Inter','AC Milan','ft',2,1,'Giuseppe Meazza',-20,20,45),
+  makeMatch('serie_a','Serie A','Rodada 25','Juventus','Napoli','ft',0,1,'Allianz Stadium',-20,20,45),
+  makeMatch('serie_a','Serie A','Rodada 25','Roma','Lazio','ft',1,0,'Olimpico, Roma',-21,20,45),
+  makeMatch('serie_a','Serie A','Rodada 25','Atalanta','Fiorentina','ft',2,0,'Gewiss Stadium',-21,18,0),
+  makeMatch('serie_a','Serie A','Rodada 30','Inter','Roma','soon',0,0,'Giuseppe Meazza',14,20,45),
+  makeMatch('serie_a','Serie A','Rodada 30','Napoli','Lazio','soon',0,0,'Diego Armando Maradona',14,20,45),
+  makeMatch('serie_a','Serie A','Rodada 30','Juventus','Atalanta','soon',0,0,'Allianz Stadium',15,20,45),
+  makeMatch('serie_a','Serie A','Rodada 30','AC Milan','Fiorentina','soon',0,0,'San Siro',15,18,0),
+  makeMatch('serie_a','Serie A','Rodada 31','Inter','Fiorentina','soon',0,0,'Giuseppe Meazza',21,20,45),
+  makeMatch('serie_a','Serie A','Rodada 31','Napoli','AC Milan','soon',0,0,'Diego Armando Maradona',21,20,45),
+  makeMatch('serie_a','Serie A','Rodada 31','Roma','Juventus','soon',0,0,'Olimpico, Roma',22,20,45),
+  makeMatch('serie_a','Serie A','Rodada 31','Lazio','Atalanta','soon',0,0,'Olimpico, Roma',22,18,0),
+  makeMatch('serie_a','Serie A','Rodada 32','Juventus','Inter','soon',0,0,'Allianz Stadium',28,20,45),
+  makeMatch('serie_a','Serie A','Rodada 32','AC Milan','Roma','soon',0,0,'San Siro',28,20,45)
+];
 
-  /* Se não tiver nada hoje, busca janela de ±7 dias */
-  if (list.length === 0) {
-    var d1 = new Date(); d1.setDate(d1.getDate() - 7);
-    var d2 = new Date(); d2.setDate(d2.getDate() + 7);
-    var from = d1.toISOString().slice(0,10);
-    var to   = d2.toISOString().slice(0,10);
-    var data2 = await apiFetch('/fixtures?league=' + leagueId + '&season=' + season + '&from=' + from + '&to=' + to);
-    list = (data2.response || []).map(normalizeFixture);
-  }
+/* BUNDESLIGA */
+MOCK.bundesliga = [
+  makeMatch('bundesliga','Bundesliga','Rodada 25','Bayern München','Leverkusen','ft',1,1,'Allianz Arena',-6,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 25','Dortmund','RB Leipzig','ft',2,1,'Signal Iduna Park',-6,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 25','Stuttgart','Eintracht','ft',3,0,'MHPArena',-7,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 25','Freiburg','Bayern München','ft',0,4,'Europa-Park Stadion',-7,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 26','Bayern München','Dortmund','live',2,1,'Allianz Arena',0,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 26','Leverkusen','RB Leipzig','live',1,0,'BayArena',0,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 26','Eintracht','Stuttgart','soon',0,0,'Deutsche Bank Park',1,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 26','RB Leipzig','Freiburg','soon',0,0,'Red Bull Arena',1,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 27','Dortmund','Bayern München','soon',0,0,'Signal Iduna Park',7,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 27','Leverkusen','Stuttgart','soon',0,0,'BayArena',7,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 27','Eintracht','Freiburg','soon',0,0,'Deutsche Bank Park',8,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 27','RB Leipzig','Bayern München','soon',0,0,'Red Bull Arena',8,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 24','Bayern München','Eintracht','ft',3,1,'Allianz Arena',-13,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 24','Dortmund','Freiburg','ft',2,0,'Signal Iduna Park',-13,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 24','Leverkusen','Bayern München','ft',2,2,'BayArena',-13,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 24','Stuttgart','RB Leipzig','ft',1,3,'MHPArena',-14,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 23','Bayern München','Stuttgart','ft',5,0,'Allianz Arena',-20,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 23','Dortmund','Leverkusen','ft',1,2,'Signal Iduna Park',-20,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 23','RB Leipzig','Eintracht','ft',2,0,'Red Bull Arena',-21,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 23','Freiburg','Stuttgart','ft',1,1,'Europa-Park Stadion',-21,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 28','Bayern München','RB Leipzig','soon',0,0,'Allianz Arena',14,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 28','Dortmund','Stuttgart','soon',0,0,'Signal Iduna Park',14,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 28','Leverkusen','Eintracht','soon',0,0,'BayArena',15,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 28','Freiburg','RB Leipzig','soon',0,0,'Europa-Park Stadion',15,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 29','Bayern München','Freiburg','soon',0,0,'Allianz Arena',21,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 29','Dortmund','Eintracht','soon',0,0,'Signal Iduna Park',21,20,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 29','Leverkusen','RB Leipzig','soon',0,0,'BayArena',22,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 29','Stuttgart','Bayern München','soon',0,0,'MHPArena',22,15,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 30','Bayern München','Leverkusen','soon',0,0,'Allianz Arena',28,18,30),
+  makeMatch('bundesliga','Bundesliga','Rodada 30','Dortmund','RB Leipzig','soon',0,0,'Signal Iduna Park',28,20,30)
+];
 
-  cacheSet(key, list);
-  return list;
-}
+/* LIGUE 1 */
+MOCK.ligue1 = [
+  makeMatch('ligue1','Ligue 1','Rodada 26','PSG','Monaco','ft',3,1,'Parc des Princes',-6,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 26','Lyon','Marseille','ft',1,2,'Groupama Stadium',-6,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 26','Lens','Nice','ft',2,0,'Stade Bollaert',-7,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 26','Lille','Lyon','ft',1,1,'Stade Pierre-Mauroy',-7,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 27','Monaco','PSG','live',0,1,'Stade Louis II',0,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 27','Marseille','Lens','live',2,2,'Vélodrome',0,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 27','Nice','Lille','soon',0,0,'Stade de Nice',1,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 27','Lyon','Monaco','soon',0,0,'Groupama Stadium',1,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 28','PSG','Marseille','soon',0,0,'Parc des Princes',7,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 28','Monaco','Lens','soon',0,0,'Stade Louis II',7,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 28','Nice','PSG','soon',0,0,'Stade de Nice',8,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 28','Lille','Marseille','soon',0,0,'Stade Pierre-Mauroy',8,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 25','PSG','Lens','ft',4,0,'Parc des Princes',-13,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 25','Monaco','Nice','ft',2,1,'Stade Louis II',-13,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 25','Marseille','Lille','ft',1,0,'Vélodrome',-14,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 25','Lyon','Nice','ft',3,2,'Groupama Stadium',-14,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 24','PSG','Lyon','ft',2,0,'Parc des Princes',-20,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 24','Monaco','Marseille','ft',1,1,'Stade Louis II',-20,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 24','Lens','Lille','ft',2,2,'Stade Bollaert',-21,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 24','Nice','Lyon','ft',0,1,'Stade de Nice',-21,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 29','PSG','Lille','soon',0,0,'Parc des Princes',14,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 29','Monaco','Lyon','soon',0,0,'Stade Louis II',14,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 29','Marseille','Nice','soon',0,0,'Vélodrome',15,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 29','Lens','PSG','soon',0,0,'Stade Bollaert',15,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 30','PSG','Lyon','soon',0,0,'Parc des Princes',21,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 30','Monaco','Lens','soon',0,0,'Stade Louis II',21,20,0),
+  makeMatch('ligue1','Ligue 1','Rodada 30','Marseille','Lille','soon',0,0,'Vélodrome',22,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 30','Nice','Lyon','soon',0,0,'Stade de Nice',22,17,0),
+  makeMatch('ligue1','Ligue 1','Rodada 31','PSG','Monaco','soon',0,0,'Parc des Princes',28,21,0),
+  makeMatch('ligue1','Ligue 1','Rodada 31','Marseille','Lens','soon',0,0,'Vélodrome',28,20,0)
+];
 
-/* Escalação */
-async function loadLineups(fixtureId) {
-  var key = 'lineup_' + fixtureId;
-  var hit = cacheGet(key); if (hit) return hit;
-  try {
-    var data = await apiFetch('/fixtures/lineups?fixture=' + fixtureId);
-    var result = data.response || [];
-    cacheSet(key, result);
-    return result;
-  } catch(e) { return []; }
-}
+/* BRASILEIRÃO */
+MOCK.brasileirao = [
+  makeMatch('brasileirao','Brasileirão','Rodada 3','Flamengo','Palmeiras','ft',2,1,'Maracanã',-6,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 3','Corinthians','São Paulo','ft',0,2,'Arena Corinthians',-6,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 3','Atlético-MG','Fluminense','ft',3,1,'Arena MRV',-7,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 3','Botafogo','Internacional','ft',1,0,'Nilton Santos',-7,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 3','Grêmio','Santos','ft',2,0,'Arena do Grêmio',-7,16,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 4','Palmeiras','Corinthians','live',1,0,'Allianz Parque',0,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 4','Flamengo','Atlético-MG','live',2,2,'Maracanã',0,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 4','São Paulo','Botafogo','soon',0,0,'MorumBIS',1,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 4','Internacional','Grêmio','soon',0,0,'Beira-Rio',1,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 4','Fluminense','Santos','soon',0,0,'Maracanã',1,16,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 5','Flamengo','São Paulo','soon',0,0,'Maracanã',7,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 5','Palmeiras','Internacional','soon',0,0,'Allianz Parque',7,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 5','Corinthians','Botafogo','soon',0,0,'Arena Corinthians',8,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 5','Atlético-MG','Grêmio','soon',0,0,'Arena MRV',8,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 5','Santos','Fluminense','soon',0,0,'Vila Belmiro',8,16,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 2','Flamengo','Corinthians','ft',3,0,'Maracanã',-13,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 2','Palmeiras','São Paulo','ft',1,1,'Allianz Parque',-13,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 2','Atlético-MG','Botafogo','ft',2,1,'Arena MRV',-14,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 2','Internacional','Santos','ft',0,1,'Beira-Rio',-14,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 2','Grêmio','Fluminense','ft',2,2,'Arena do Grêmio',-14,16,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 1','Flamengo','Fluminense','ft',2,0,'Maracanã',-20,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 1','Palmeiras','Grêmio','ft',2,1,'Allianz Parque',-20,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 1','Corinthians','Internacional','ft',1,2,'Arena Corinthians',-21,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 1','São Paulo','Atlético-MG','ft',0,1,'MorumBIS',-21,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 1','Botafogo','Santos','ft',3,1,'Nilton Santos',-21,16,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 6','Flamengo','Internacional','soon',0,0,'Maracanã',14,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 6','Palmeiras','Atlético-MG','soon',0,0,'Allianz Parque',14,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 6','Corinthians','Grêmio','soon',0,0,'Arena Corinthians',15,20,0),
+  makeMatch('brasileirao','Brasileirão','Rodada 6','São Paulo','Santos','soon',0,0,'MorumBIS',15,18,30),
+  makeMatch('brasileirao','Brasileirão','Rodada 6','Fluminense','Botafogo','soon',0,0,'Maracanã',15,16,0)
+];
 
-/* Estatísticas */
-async function loadStats(fixtureId) {
-  var key = 'stats_' + fixtureId;
-  var hit = cacheGet(key); if (hit) return hit;
-  try {
-    var data = await apiFetch('/fixtures/statistics?fixture=' + fixtureId);
-    var result = data.response || [];
-    cacheSet(key, result);
-    return result;
-  } catch(e) { return []; }
-}
+/* NBA */
+MOCK.nba = [
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 65','Lakers','Warriors','ft',112,105,'Crypto.com Arena',-4,2,30),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 65','Celtics','Bulls','ft',121,98,'TD Garden',-4,1,0),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 65','Knicks','Nets','ft',108,102,'MSG',-4,0,30),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 66','Nuggets','Thunder','ft',115,110,'Ball Arena',-3,3,10),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 66','Heat','Bulls','ft',99,95,'Kaseya Center',-3,1,0),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 67','Lakers','Celtics','live',87,91,'Crypto.com Arena',0,2,30),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 67','Knicks','Heat','live',104,98,'MSG',0,1,0),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 67','Warriors','Nuggets','soon',0,0,'Chase Center',1,4,0),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 67','Bulls','Celtics','soon',0,0,'United Center',1,1,30),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 67','Nets','Knicks','soon',0,0,'Barclays Center',1,0,30),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 68','Lakers','Nuggets','soon',0,0,'Crypto.com Arena',2,3,30),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 68','Celtics','Heat','soon',0,0,'TD Garden',2,1,0),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 68','Thunder','Warriors','soon',0,0,'Paycom Center',2,2,0),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 69','Knicks','Bulls','soon',0,0,'MSG',4,1,30),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 69','Suns','Lakers','soon',0,0,'Footprint Center',4,3,0),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 62','Celtics','Knicks','ft',119,108,'TD Garden',-7,1,0),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 62','Warriors','Lakers','ft',122,118,'Chase Center',-7,4,0),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 62','Nuggets','Suns','ft',106,98,'Ball Arena',-7,3,0),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 62','Heat','Nets','ft',113,107,'Kaseya Center',-7,0,30),
+  makeMatch('nba','NBA','Conf. Oeste — Reg. 63','Thunder','Nuggets','ft',105,100,'Paycom Center',-6,2,10),
+  makeMatch('nba','NBA','Conf. Leste — Reg. 63','Bulls','Knicks','ft',97,101,'United Center',-6,1,30),
+  makeMatch('nba','NBA','Playoffs 1ª Rod.','Celtics','Knicks','soon',0,0,'TD Garden',10,1,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod.','Lakers','Warriors','soon',0,0,'Crypto.com Arena',10,4,30),
+  makeMatch('nba','NBA','Playoffs 1ª Rod.','Nuggets','Thunder','soon',0,0,'Ball Arena',11,3,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod.','Heat','Bulls','soon',0,0,'Kaseya Center',11,1,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod. G2','Celtics','Knicks','soon',0,0,'TD Garden',12,1,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod. G2','Lakers','Warriors','soon',0,0,'Crypto.com Arena',12,4,30),
+  makeMatch('nba','NBA','Playoffs 1ª Rod. G2','Nuggets','Thunder','soon',0,0,'Ball Arena',13,3,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod. G2','Heat','Bulls','soon',0,0,'Kaseya Center',13,1,0),
+  makeMatch('nba','NBA','Playoffs 1ª Rod. G3','Knicks','Celtics','soon',0,0,'MSG',16,1,0)
+];
 
-/* ═══════════════════════════════════════════════════════════════
-   RENDER HELPERS
-═══════════════════════════════════════════════════════════════ */
-function stripeClass(s) { return s==='live'?'stripe-live':s==='ft'?'stripe-ft':'stripe-soon'; }
+/* EUROLEAGUE */
+MOCK.euroleague = [
+  makeMatch('euroleague','EuroLeague','Rodada 28','Real Madrid B','Fenerbahçe','ft',85,78,'WiZink Center',-5,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 28','Olympiacos','Panathinaikos','ft',72,79,'Peace and Friendship Stadium',-5,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 28','Anadolu Efes','CSKA Moscow','ft',80,75,'Sinan Erdem Dome',-5,19,30),
+  makeMatch('euroleague','EuroLeague','Rodada 29','Fenerbahçe','Real Madrid B','live',41,38,'Ülker Sports Arena',0,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 29','CSKA Moscow','Olympiacos','live',55,62,'CSKA Arena',0,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 29','Panathinaikos','Anadolu Efes','soon',0,0,'OAKA',1,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 30','Real Madrid B','Olympiacos','soon',0,0,'WiZink Center',7,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 30','Fenerbahçe','Panathinaikos','soon',0,0,'Ülker Sports Arena',7,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 30','CSKA Moscow','Anadolu Efes','soon',0,0,'CSKA Arena',7,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 31','Anadolu Efes','Fenerbahçe','soon',0,0,'Sinan Erdem Dome',14,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 31','Olympiacos','Real Madrid B','soon',0,0,'Peace and Friendship Stadium',14,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 31','Panathinaikos','CSKA Moscow','soon',0,0,'OAKA',14,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 27','Fenerbahçe','Olympiacos','ft',88,79,'Ülker Sports Arena',-12,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 27','CSKA Moscow','Real Madrid B','ft',70,82,'CSKA Arena',-12,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 27','Panathinaikos','Anadolu Efes','ft',91,85,'OAKA',-12,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 26','Real Madrid B','CSKA Moscow','ft',77,68,'WiZink Center',-19,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 26','Fenerbahçe','Anadolu Efes','ft',82,80,'Ülker Sports Arena',-19,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 26','Olympiacos','Panathinaikos','ft',65,72,'Peace and Friendship Stadium',-19,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 32','Real Madrid B','Panathinaikos','soon',0,0,'WiZink Center',21,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 32','CSKA Moscow','Fenerbahçe','soon',0,0,'CSKA Arena',21,19,0),
+  makeMatch('euroleague','EuroLeague','Rodada 32','Anadolu Efes','Olympiacos','soon',0,0,'Sinan Erdem Dome',21,19,30),
+  makeMatch('euroleague','EuroLeague','Rodada 33','Fenerbahçe','CSKA Moscow','soon',0,0,'Ülker Sports Arena',28,19,45),
+  makeMatch('euroleague','EuroLeague','Rodada 33','Real Madrid B','Anadolu Efes','soon',0,0,'WiZink Center',28,20,45),
+  makeMatch('euroleague','EuroLeague','Rodada 33','Panathinaikos','Olympiacos','soon',0,0,'OAKA',28,19,0),
+  makeMatch('euroleague','EuroLeague','Playoff — Jogo 1','Real Madrid B','Fenerbahçe','soon',0,0,'WiZink Center',35,20,45),
+  makeMatch('euroleague','EuroLeague','Playoff — Jogo 1','Olympiacos','CSKA Moscow','soon',0,0,'Peace and Friendship Stadium',35,19,0),
+  makeMatch('euroleague','EuroLeague','Playoff — Jogo 2','Fenerbahçe','Real Madrid B','soon',0,0,'Ülker Sports Arena',38,19,45),
+  makeMatch('euroleague','EuroLeague','Playoff — Jogo 2','CSKA Moscow','Olympiacos','soon',0,0,'CSKA Arena',38,19,0),
+  makeMatch('euroleague','EuroLeague','Final Four — Semi','Real Madrid B','Panathinaikos','soon',0,0,'Estambul',45,19,0),
+  makeMatch('euroleague','EuroLeague','Final Four — Semi','Fenerbahçe','CSKA Moscow','soon',0,0,'Estambul',45,21,30)
+];
 
-function statusHtml(m) {
-  if (m.status==='live') return '<div class="mc-status status-live"><div class="dot"></div>AO VIVO ' + m.min + '</div>';
-  if (m.status==='ft')   return '<div class="mc-status status-ft">Encerrado</div>';
-  return '<div class="mc-status status-soon">' + m.min + '</div>';
-}
-
-function scoreHtml(m) {
-  if (m.status==='soon')
-    return '<div class="mc-score score-soon">' + m.min + '</div>'
-         + '<div class="mc-min">' + m.date + '</div>';
-  var cls = m.status==='live' ? ' score-live' : '';
-  return '<div class="mc-score' + cls + '">'
-       + m.score.h + '<span style="color:var(--grey2);margin:0 2px;font-size:28px;">:</span>' + m.score.a
-       + '</div>'
-       + '<div class="mc-min">' + (m.status==='live' ? m.min : 'FT') + '</div>';
-}
-
-function crestHtml(team) {
-  return team.logo
-    ? '<div class="mc-crest"><img src="' + team.logo + '" alt="' + team.name + '" loading="lazy"/></div>'
-    : '<div class="mc-crest"><span class="mc-crest-fb">⚽</span></div>';
-}
-
-function drCrestHtml(team) {
-  return team.logo
-    ? '<div class="dr-crest"><img src="' + team.logo + '" alt="' + team.name + '"/></div>'
-    : '<div class="dr-crest"><span class="dr-crest-fb">⚽</span></div>';
-}
-
-function renderMatches(list) {
-  var grid  = document.getElementById('matches-grid');
-  var count = document.getElementById('match-count');
-
-  if (!list || list.length === 0) {
-    grid.innerHTML  = '<div class="empty-state" style="grid-column:1/-1">Nenhum jogo encontrado.</div>';
-    count.textContent = '';
-    rebuildZones(); detectCols();
-    return;
-  }
-
-  var h = '';
-  for (var i = 0; i < list.length; i++) {
-    var m = list[i];
-    h += '<div class="match-card focusable" tabindex="0" role="button"'
-       + ' data-idx="' + i + '" aria-label="' + m.home.name + ' x ' + m.away.name + '">'
-       + '<div class="mc-stripe ' + stripeClass(m.status) + '"></div>'
-       + '<div class="mc-head"><span class="mc-league">' + m.league + '</span>' + statusHtml(m) + '</div>'
-       + '<div class="mc-body"><div class="mc-teams">'
-       + '<div class="mc-team">' + crestHtml(m.home) + '<div class="mc-tname">' + m.home.name + '</div></div>'
-       + '<div class="mc-score-col">' + scoreHtml(m) + '</div>'
-       + '<div class="mc-team">' + crestHtml(m.away) + '<div class="mc-tname">' + m.away.name + '</div></div>'
-       + '</div></div>'
-       + '<div class="mc-foot"><span class="mc-venue">' + m.venue + '</span><span class="mc-arrow">Detalhes ›</span></div>'
-       + '</div>';
-  }
-
-  grid.innerHTML    = h;
-  count.textContent = list.length + ' jogos';
-
-  /* re-bind click */
-  grid.addEventListener('click', function(e) {
-    var card = e.target.closest('.match-card');
-    if (!card) return;
-    var idx = parseInt(card.getAttribute('data-idx'), 10);
-    if (idx >= 0 && currentFixtures[idx]) {
-      drawerSrcIdx = gridEls.indexOf(card);
-      openDrawer(currentFixtures[idx]);
+/* MOCK "Todos" = mistura das ligas com jogos do dia */
+MOCK.all = (function(){
+  var list = [];
+  var keys = ['champions','premier','laliga','serie_a','bundesliga','ligue1','brasileirao','nba','euroleague'];
+  for(var k=0;k<keys.length;k++){
+    var arr = MOCK[keys[k]];
+    for(var i=0;i<arr.length;i++){
+      var m = arr[i];
+      if(m.status==='live' || m.status==='soon'){
+        /* inclui os de hoje/próximos */
+        var today = new Date(); today.setHours(0,0,0,0);
+        var mDate = new Date(m.date.split('/').reverse().join('-'));
+        var diff = Math.round((mDate - today)/(1000*60*60*24));
+        if(diff >= -1 && diff <= 1) list.push(m);
+      }
     }
-  }, { once: true });
+  }
+  /* Se pouco, adiciona pelo menos ao vivo */
+  if(list.length < 4){
+    for(var k2=0;k2<keys.length;k2++){
+      var arr2 = MOCK[keys[k2]];
+      for(var j=0;j<arr2.length;j++){
+        if(arr2[j].status==='live' && list.indexOf(arr2[j])<0) list.push(arr2[j]);
+      }
+    }
+  }
+  return list;
+})();
 
-  rebuildZones(); detectCols();
-  gridIndex = 0; savedGridCol = 0;
+/* ── LABELS ────────────────────────────────────────────────── */
+var LABELS = {
+  all:'Jogos de Hoje', champions:'Champions League',
+  premier:'Premier League', laliga:'La Liga', serie_a:'Serie A',
+  bundesliga:'Bundesliga', ligue1:'Ligue 1', brasileirao:'Brasileirão',
+  nba:'NBA', euroleague:'EuroLeague'
+};
+
+/* ── RENDER ────────────────────────────────────────────────── */
+function stripeClass(s){return s==='live'?'stripe-live':s==='ft'?'stripe-ft':'stripe-soon';}
+
+function statusHtml(m){
+  if(m.status==='live') return '<div class="mc-status status-live"><div class="dot"></div>AO VIVO '+m.min+'</div>';
+  if(m.status==='ft')   return '<div class="mc-status status-ft">Encerrado</div>';
+  return '<div class="mc-status status-soon">'+m.min+'</div>';
 }
 
-function showLoading(title) {
-  document.getElementById('main-title').textContent = title || 'Carregando...';
-  document.getElementById('matches-grid').innerHTML =
-    '<div class="loading-state" style="grid-column:1/-1">'
-    + '<div class="loading-spinner"></div>'
-    + '<div class="loading-text">Carregando jogos...</div></div>';
-  rebuildZones();
+function scoreHtml(m){
+  if(m.status==='soon')
+    return '<div class="mc-score score-soon">'+m.min+'</div>'
+          +'<div class="mc-min">'+m.date+'</div>';
+  var cls=m.status==='live'?' score-live':'';
+  return '<div class="mc-score'+cls+'">'+m.score.h
+        +'<span style="color:var(--grey2);margin:0 2px;font-size:28px;">:</span>'
+        +m.score.a+'</div>'
+        +'<div class="mc-min">'+(m.status==='live'?m.min:'FT')+'</div>';
 }
 
-function showError(msg) {
-  document.getElementById('matches-grid').innerHTML =
-    '<div class="error-state" style="grid-column:1/-1">'
-    + '<div class="error-icon">⚠️</div><div>' + msg + '</div></div>';
-  document.getElementById('match-count').textContent = '';
-  rebuildZones();
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   FIXTURE STORE
-═══════════════════════════════════════════════════════════════ */
 var currentFixtures = [];
 
-/* ═══════════════════════════════════════════════════════════════
-   LOAD FILTER
-═══════════════════════════════════════════════════════════════ */
-async function loadFilter(filter, leagueId, season) {
-  var lbl = LABELS[filter] || filter;
-  showLoading(lbl);
-  document.getElementById('main-title').textContent = lbl;
-  document.getElementById('live-dot').style.display = filter === 'live' ? 'block' : 'none';
-
-  try {
-    var list = [];
-
-    if (filter === 'nba') {
-      list = NBA_MOCK;
-    } else if (filter === 'live') {
-      list = await loadLive();
-    } else if (filter === 'all') {
-      list = await loadToday();
-    } else if (leagueId) {
-      list = await loadLeague(leagueId, season);
-    }
-
-    /* Ordenar: ao vivo → agendados → encerrados */
-    list.sort(function(a, b) {
-      var o = { live:0, soon:1, ft:2 };
-      return (o[a.status] || 1) - (o[b.status] || 1);
-    });
-
-    currentFixtures = list;
-    renderMatches(list);
-
-    rebuildZones(); detectCols();
-    if (gridEls.length > 0) enterGrid(0);
-
-  } catch(err) {
-    console.error('[Arena]', err);
-    showError('Não foi possível carregar os jogos agora.<br>Verifique sua conexão e tente novamente.');
+function renderMatches(list){
+  var grid  = document.getElementById('matches-grid');
+  var count = document.getElementById('match-count');
+  if(!list||list.length===0){
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Nenhum jogo encontrado.</div>';
+    count.textContent='';
+    rebuildZones();detectCols();
+    return;
   }
+  var h='';
+  for(var i=0;i<list.length;i++){
+    var m=list[i];
+    h+='<div class="match-card focusable" tabindex="0" role="button"'
+      +' data-idx="'+i+'" aria-label="'+m.home.name+' x '+m.away.name+'">'
+      +'<div class="mc-stripe '+stripeClass(m.status)+'"></div>'
+      +'<div class="mc-head"><span class="mc-league">'+m.league+'</span>'+statusHtml(m)+'</div>'
+      +'<div class="mc-body"><div class="mc-teams">'
+      +'<div class="mc-team">'+crestHtml(m.home)+'<div class="mc-tname">'+m.home.name+'</div></div>'
+      +'<div class="mc-score-col">'+scoreHtml(m)+'</div>'
+      +'<div class="mc-team">'+crestHtml(m.away)+'<div class="mc-tname">'+m.away.name+'</div></div>'
+      +'</div></div>'
+      +'<div class="mc-foot"><span class="mc-venue">'+m.venue+'</span><span class="mc-arrow">Detalhes ›</span></div>'
+      +'</div>';
+  }
+  grid.innerHTML=h;
+  count.textContent=list.length+' jogos';
+  grid.addEventListener('click',function(e){
+    var card=e.target.closest('.match-card');
+    if(!card)return;
+    var idx=parseInt(card.getAttribute('data-idx'),10);
+    if(idx>=0&&currentFixtures[idx]){drawerSrcIdx=gridEls.indexOf(card);openDrawer(currentFixtures[idx]);}
+  },{once:true});
+  rebuildZones();detectCols();
+  gridIndex=0;savedGridCol=0;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DRAWER
-═══════════════════════════════════════════════════════════════ */
-var drawerOpen   = false;
-var drawerSrcIdx = -1;
-var drawerEl     = document.getElementById('drawer');
-var overlayEl    = document.getElementById('drawer-overlay');
+function showLoading(title){
+  document.getElementById('main-title').textContent=title||'Carregando...';
+  document.getElementById('matches-grid').innerHTML=
+    '<div class="loading-state" style="grid-column:1/-1">'
+    +'<div class="loading-spinner"></div>'
+    +'<div class="loading-text">Carregando jogos...</div></div>';
+  rebuildZones();
+}
 
-function openDrawer(m) {
-  if (!m) return;
+function loadFilter(filter){
+  var lbl=LABELS[filter]||filter;
+  document.getElementById('main-title').textContent=lbl;
+  document.getElementById('live-dot').style.display=filter==='live'?'block':'none';
+  var list=MOCK[filter]||[];
+  list=list.slice().sort(function(a,b){
+    var o={live:0,soon:1,ft:2};
+    return (o[a.status]||1)-(o[b.status]||1);
+  });
+  currentFixtures=list;
+  renderMatches(list);
+  rebuildZones();detectCols();
+  if(gridEls.length>0) enterGrid(0);
+}
 
-  var scoreTxt, scoreCls, statusCls, statusTxt, minHtml = '';
-  if (m.status === 'live') {
-    scoreTxt  = m.score.h + ' : ' + m.score.a; scoreCls = 'live';
-    statusCls = 'dsb-live'; statusTxt = '● AO VIVO';
-    minHtml   = '<div class="dr-min">' + m.min + '</div>';
-  } else if (m.status === 'ft') {
-    scoreTxt  = m.score.h + ' : ' + m.score.a; scoreCls = '';
-    statusCls = 'dsb-ft'; statusTxt = 'Encerrado';
+/* ── DRAWER ────────────────────────────────────────────────── */
+var drawerOpen=false, drawerSrcIdx=-1;
+var drawerEl=document.getElementById('drawer');
+var overlayEl=document.getElementById('drawer-overlay');
+
+function openDrawer(m){
+  if(!m)return;
+  var scoreTxt,scoreCls,statusCls,statusTxt,minHtml='';
+  if(m.status==='live'){
+    scoreTxt=m.score.h+' : '+m.score.a;scoreCls='live';
+    statusCls='dsb-live';statusTxt='● AO VIVO';
+    minHtml='<div class="dr-min">'+m.min+'</div>';
+  } else if(m.status==='ft'){
+    scoreTxt=m.score.h+' : '+m.score.a;scoreCls='';
+    statusCls='dsb-ft';statusTxt='Encerrado';
   } else {
-    scoreTxt  = m.time || '--:--'; scoreCls = 'soon';
-    statusCls = 'dsb-soon'; statusTxt = 'Agendado';
-  }
-
-  drawerEl.innerHTML =
-    '<div class="dr-header">'
-    + '<div class="dr-back">← Pressione VOLTAR para fechar</div>'
-    + '<div class="dr-competition">' + m.league + '</div>'
-    + '<div class="dr-phase">' + (m.phase || '') + (m.season ? ' · ' + m.season : '') + '</div>'
-    + '<div class="dr-venue">' + m.venue + '</div>'
-    + '</div>'
-    + '<div class="dr-score-block">'
-    + '<div class="dr-teams-row">'
-    + '<div class="dr-club">' + drCrestHtml(m.home) + '<div class="dr-cname">' + m.home.name + '</div></div>'
-    + '<div class="dr-score-center">'
-    + '<div class="dr-score ' + scoreCls + '">' + scoreTxt + '</div>'
-    + '<div class="dr-status-badge ' + statusCls + '">' + statusTxt + '</div>'
-    + minHtml
-    + '</div>'
-    + '<div class="dr-club">' + drCrestHtml(m.away) + '<div class="dr-cname">' + m.away.name + '</div></div>'
-    + '</div>'
-    + '</div>'
-    + '<div class="dr-info-block">'
-    + '<div class="dr-info-title">Informações da Partida</div>'
-    + '<div class="dr-info-row"><span class="dr-il">Competição</span><span class="dr-iv">' + m.league + '</span></div>'
-    + (m.phase  ? '<div class="dr-info-row"><span class="dr-il">Fase</span><span class="dr-iv">' + m.phase + '</span></div>' : '')
-    + (m.season ? '<div class="dr-info-row"><span class="dr-il">Temporada</span><span class="dr-iv">' + m.season + '</span></div>' : '')
-    + '<div class="dr-info-row"><span class="dr-il">Estádio</span><span class="dr-iv">' + m.venue + '</span></div>'
-    + (m.city   ? '<div class="dr-info-row"><span class="dr-il">Cidade</span><span class="dr-iv">' + m.city + '</span></div>' : '')
-    + '<div class="dr-info-row"><span class="dr-il">Data</span><span class="dr-iv">' + m.date + '</span></div>'
-    + (m.status === 'soon' ? '<div class="dr-info-row"><span class="dr-il">Horário</span><span class="dr-iv">' + m.time + '</span></div>' : '')
-    + '</div>'
-    + '<div id="dr-extra">'
-    + (m.apiId ? '<div style="padding:24px 32px;text-align:center;"><div class="loading-spinner" style="width:28px;height:28px;border-width:2px;margin-bottom:8px;"></div><div style="font-size:var(--fmeta);color:var(--grey);">Carregando detalhes...</div></div>' : '')
-    + '</div>';
-
-  drawerEl.classList.add('open');
-  overlayEl.classList.add('open');
-  drawerEl.scrollTop = 0;
-  drawerOpen = true;
-
-  /* Busca escalação + stats para jogos reais */
-  if (m.apiId) {
-    Promise.all([ loadLineups(m.apiId), loadStats(m.apiId) ])
-      .then(function(res) {
-        var el = document.getElementById('dr-extra');
-        if (el) renderDrawerExtra(res[0], res[1], el);
-      })
-      .catch(function() {
-        var el = document.getElementById('dr-extra');
-        if (el) el.innerHTML = '';
-      });
-  }
-}
-
-function renderDrawerExtra(lineups, stats, el) {
-  var html = '';
-
-  /* Estatísticas */
-  if (stats && stats.length >= 2) {
-    var sH = stats[0].statistics || [];
-    var sA = stats[1].statistics || [];
-    var keys    = ['Ball Possession','Total Shots','Shots on Goal','Fouls','Corner Kicks'];
-    var ptLabels = {
-      'Ball Possession':'Posse de Bola','Total Shots':'Total de Chutes',
-      'Shots on Goal':'Chutes a Gol','Fouls':'Faltas','Corner Kicks':'Escanteios'
-    };
-    var rows = '';
-    for (var si = 0; si < keys.length; si++) {
-      var lbl = keys[si];
-      var hV = '', aV = '';
-      for (var k = 0; k < sH.length; k++) if (sH[k].type === lbl) { hV = String(sH[k].value || '0'); break; }
-      for (var l = 0; l < sA.length; l++) if (sA[l].type === lbl) { aV = String(sA[l].value || '0'); break; }
-      if (!hV && !aV) continue;
-      var hN = parseInt(hV.replace('%',''), 10) || 0;
-      var aN = parseInt(aV.replace('%',''), 10) || 0;
-      var hPct = Math.round(hN / (hN + aN || 1) * 100);
-      rows += '<div class="dr-stat-row">'
-            + '<span class="dr-stat-lbl">' + (ptLabels[lbl] || lbl) + '</span>'
-            + '<span class="dr-stat-val" style="text-align:left">' + hV + '</span>'
-            + '<div class="dr-stat-bar-wrap"><div class="dr-stat-bar" style="width:' + hPct + '%"></div></div>'
-            + '<span class="dr-stat-val">' + aV + '</span>'
-            + '</div>';
-    }
-    if (rows) {
-      html += '<div class="dr-stat-block">'
-            + '<div class="dr-info-title">Estatísticas</div>'
-            + '<div class="dr-stat-row" style="margin-bottom:6px">'
-            + '<span class="dr-stat-lbl"></span>'
-            + '<span class="dr-stat-val" style="color:var(--grey);text-align:left;font-size:10px;">' + ((stats[0].team && stats[0].team.name) || 'Casa') + '</span>'
-            + '<div class="dr-stat-bar-wrap"></div>'
-            + '<span class="dr-stat-val" style="color:var(--grey);font-size:10px;">' + ((stats[1].team && stats[1].team.name) || 'Fora') + '</span>'
-            + '</div>' + rows + '</div>';
-    }
+    scoreTxt=m.time||'--:--';scoreCls='soon';
+    statusCls='dsb-soon';statusTxt='Agendado';
   }
 
   /* Escalações */
-  if (lineups && lineups.length >= 1) {
-    var lu = '<div class="dr-lineup-block"><div class="dr-lu-title">Escalação Titular</div><div class="dr-lu-grid">';
-    for (var ti = 0; ti < Math.min(lineups.length, 2); ti++) {
-      var team    = lineups[ti];
-      var players = team.startXI || [];
-      lu += '<div class="dr-lu-team"><div class="dr-lu-tname">' + ((team.team && team.team.name) || '') + '</div>';
-      for (var pi = 0; pi < players.length; pi++) {
-        var p = players[pi].player || players[pi];
-        lu += '<div class="dr-player">'
-            + '<span class="dr-pnum">' + (p.number || '') + '</span>'
-            + '<span class="dr-pname">' + (p.name   || '') + '</span>'
-            + '<span class="dr-ppos">'  + (p.pos    || '') + '</span>'
-            + '</div>';
+  var luHtml='';
+  if(m.lineup){
+    var makeTeamList=function(players){
+      var s='';
+      for(var i=0;i<players.length;i++){
+        s+='<div class="dr-player">'
+          +'<span class="dr-pnum">'+players[i].n+'</span>'
+          +'<span class="dr-pname">'+players[i].name+'</span>'
+          +'<span class="dr-ppos">'+players[i].pos+'</span>'
+          +'</div>';
       }
-      lu += '</div>';
-    }
-    lu += '</div></div>';
-    html += lu;
+      return s;
+    };
+    luHtml='<div class="dr-lineup-block">'
+      +'<div class="dr-lu-title">Escalação Titular</div>'
+      +'<div class="dr-lu-grid">'
+      +'<div class="dr-lu-team"><div class="dr-lu-tname">'+m.home.name+'</div>'+makeTeamList(m.lineup.home)+'</div>'
+      +'<div class="dr-lu-team"><div class="dr-lu-tname">'+m.away.name+'</div>'+makeTeamList(m.lineup.away)+'</div>'
+      +'</div></div>';
   }
 
-  el.innerHTML = html || '';
+  drawerEl.innerHTML=
+    '<div class="dr-header">'
+    +'<div class="dr-back">← Pressione VOLTAR para fechar</div>'
+    +'<div class="dr-competition">'+m.league+'</div>'
+    +'<div class="dr-phase">'+m.phase+(m.season?' · '+m.season:'')+'</div>'
+    +'<div class="dr-venue">'+m.venue+'</div>'
+    +'</div>'
+    +'<div class="dr-score-block">'
+    +'<div class="dr-teams-row">'
+    +'<div class="dr-club">'+drCrestHtml(m.home)+'<div class="dr-cname">'+m.home.name+'</div></div>'
+    +'<div class="dr-score-center">'
+    +'<div class="dr-score '+scoreCls+'">'+scoreTxt+'</div>'
+    +'<div class="dr-status-badge '+statusCls+'">'+statusTxt+'</div>'
+    +minHtml+'</div>'
+    +'<div class="dr-club">'+drCrestHtml(m.away)+'<div class="dr-cname">'+m.away.name+'</div></div>'
+    +'</div></div>'
+    +'<div class="dr-info-block">'
+    +'<div class="dr-info-title">Informações</div>'
+    +'<div class="dr-info-row"><span class="dr-il">Competição</span><span class="dr-iv">'+m.league+'</span></div>'
+    +'<div class="dr-info-row"><span class="dr-il">Fase</span><span class="dr-iv">'+m.phase+'</span></div>'
+    +'<div class="dr-info-row"><span class="dr-il">Estádio</span><span class="dr-iv">'+m.venue+'</span></div>'
+    +'<div class="dr-info-row"><span class="dr-il">Data</span><span class="dr-iv">'+m.date+'</span></div>'
+    +(m.status==='soon'?'<div class="dr-info-row"><span class="dr-il">Horário</span><span class="dr-iv">'+m.time+'</span></div>':'')
+    +'</div>'
+    +luHtml;
+
+  drawerEl.classList.add('open');
+  overlayEl.classList.add('open');
+  drawerEl.scrollTop=0;
+  drawerOpen=true;
 }
 
-function closeDrawer() {
+function closeDrawer(){
   drawerEl.classList.remove('open');
   overlayEl.classList.remove('open');
-  drawerOpen = false;
-  if (drawerSrcIdx >= 0 && drawerSrcIdx < gridEls.length) {
-    gridIndex    = drawerSrcIdx;
-    savedGridCol = gridIndex % COLS;
-    enterGrid();
-  } else if (gridEls.length > 0) {
-    enterGrid(0);
-  } else {
-    enterNav(navIndex);
-  }
+  drawerOpen=false;
+  if(drawerSrcIdx>=0&&drawerSrcIdx<gridEls.length){
+    gridIndex=drawerSrcIdx;savedGridCol=gridIndex%COLS;enterGrid();
+  } else if(gridEls.length>0){ enterGrid(0); }
+  else { enterNav(navIndex); }
 }
 
-overlayEl.addEventListener('click', function() { if (drawerOpen) closeDrawer(); });
+overlayEl.addEventListener('click',function(){if(drawerOpen)closeDrawer();});
 
-/* ═══════════════════════════════════════════════════════════════
-   RELÓGIO
-═══════════════════════════════════════════════════════════════ */
-var DIAS  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-function tick() {
-  var d = new Date();
-  document.getElementById('clock').textContent  = pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
-  document.getElementById('cdate').textContent  = DIAS[d.getDay()] + ', ' + d.getDate() + ' ' + MESES[d.getMonth()] + ' ' + d.getFullYear();
+/* ── RELÓGIO ───────────────────────────────────────────────── */
+var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var MESES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function pad2(n){return n<10?'0'+n:''+n;}
+function tick(){
+  var d=new Date();
+  document.getElementById('clock').textContent=pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds());
+  document.getElementById('cdate').textContent=DIAS[d.getDay()]+', '+d.getDate()+' '+MESES[d.getMonth()]+' '+d.getFullYear();
 }
-tick();
-setInterval(tick, 1000);
+tick();setInterval(tick,1000);
 
-/* Auto-refresh a cada 60s para Todos / Ao Vivo */
-setInterval(function() {
-  var btn = document.querySelector('.nav-btn.active');
-  if (!btn || drawerOpen) return;
-  var f = btn.getAttribute('data-filter');
-  if (f === 'all' || f === 'live') {
-    delete cache['today_' + todayStr()];
-    delete cache['live_short'];
-    loadFilter(f, btn.getAttribute('data-league'), btn.getAttribute('data-season'));
-  }
-}, 60000);
+/* ── NAV PILL SLIDER ───────────────────────────────────────── */
+var navBtns=document.querySelectorAll('.nav-btn');
+var track=document.getElementById('nav-track');
 
-/* ═══════════════════════════════════════════════════════════════
-   NAV PILL SLIDER
-═══════════════════════════════════════════════════════════════ */
-var navBtns = document.querySelectorAll('.nav-btn');
-var track   = document.getElementById('nav-track');
-
-function updateTrack(btn) {
-  var wrap = document.getElementById('nav-wrap');
-  /* offsetLeft = posição real do botão dentro do pai, independente do scroll */
-  track.style.left  = btn.offsetLeft + 'px';
-  track.style.width = btn.offsetWidth + 'px';
-
-  /* Rola o nav-wrap para que o botão ativo fique visível */
-  var btnLeft  = btn.offsetLeft;
-  var btnRight = btn.offsetLeft + btn.offsetWidth;
-  var wrapW    = wrap.offsetWidth;
-  var scroll   = wrap.scrollLeft;
-
-  if (btnLeft < scroll + 8) {
-    /* botão saiu pela esquerda */
-    wrap.scrollLeft = btnLeft - 8;
-  } else if (btnRight > scroll + wrapW - 8) {
-    /* botão saiu pela direita */
-    wrap.scrollLeft = btnRight - wrapW + 8;
-  }
+function updateTrack(btn){
+  var wrap=document.getElementById('nav-wrap');
+  track.style.left=btn.offsetLeft+'px';
+  track.style.width=btn.offsetWidth+'px';
+  var bL=btn.offsetLeft,bW=btn.offsetWidth,wW=wrap.offsetWidth;
+  if(bL+bW>wrap.scrollLeft+wW) wrap.scrollLeft=bL+bW-wW+8;
+  if(bL<wrap.scrollLeft)       wrap.scrollLeft=bL-8;
 }
-setTimeout(function() {
-  var a = document.querySelector('.nav-btn.active');
-  if (a) updateTrack(a);
-}, 60);
+setTimeout(function(){var a=document.querySelector('.nav-btn.active');if(a)updateTrack(a);},60);
 
-for (var ni = 0; ni < navBtns.length; ni++) {
-  navBtns[ni].addEventListener('click', (function(btn) {
-    return function() {
-      for (var j = 0; j < navBtns.length; j++) navBtns[j].classList.remove('active');
+for(var ni=0;ni<navBtns.length;ni++){
+  navBtns[ni].addEventListener('click',(function(btn){
+    return function(){
+      for(var j=0;j<navBtns.length;j++) navBtns[j].classList.remove('active');
       btn.classList.add('active');
       updateTrack(btn);
-      loadFilter(
-        btn.getAttribute('data-filter'),
-        btn.getAttribute('data-league'),
-        btn.getAttribute('data-season')
-      );
+      loadFilter(btn.getAttribute('data-filter'));
     };
   })(navBtns[ni]));
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   NAVEGAÇÃO POR ZONAS (D-PAD) — estilo Netflix
-═══════════════════════════════════════════════════════════════ */
-var ZONE_NAV    = 'nav';
-var ZONE_GRID   = 'grid';
-var ZONE_FOOTER = 'footer';
+/* ── NAVEGAÇÃO POR ZONAS (D-PAD) ───────────────────────────── */
+var ZONE_NAV='nav',ZONE_GRID='grid',ZONE_FOOTER='footer';
+var currentZone=ZONE_NAV,navIndex=0,gridIndex=0,footerIndex=0,savedGridCol=0,COLS=4;
+var navEls=[],gridEls=[],footerEls=[];
+var mainEl=document.getElementById('main');
 
-var currentZone  = ZONE_NAV;
-var navIndex     = 0;
-var gridIndex    = 0;
-var footerIndex  = 0;
-var savedGridCol = 0;
-var COLS         = 4;
-
-var navEls    = [];
-var gridEls   = [];
-var footerEls = [];
-var mainEl    = document.getElementById('main');
-
-function rebuildZones() {
-  navEls    = Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
-  gridEls   = Array.prototype.slice.call(document.querySelectorAll('#matches-grid .match-card'));
-  footerEls = Array.prototype.slice.call(document.querySelectorAll('footer .focusable'));
-  if (navIndex    >= navEls.length)    navIndex    = 0;
-  if (gridIndex   >= gridEls.length)   gridIndex   = 0;
-  if (footerIndex >= footerEls.length) footerIndex = 0;
+function rebuildZones(){
+  navEls=Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
+  gridEls=Array.prototype.slice.call(document.querySelectorAll('#matches-grid .match-card'));
+  footerEls=Array.prototype.slice.call(document.querySelectorAll('footer .focusable'));
+  if(navIndex>=navEls.length) navIndex=0;
+  if(gridIndex>=gridEls.length) gridIndex=0;
+  if(footerIndex>=footerEls.length) footerIndex=0;
 }
-function rebuildFocusable() { rebuildZones(); }
+function rebuildFocusable(){rebuildZones();}
 
-function clearAllFocus() {
-  var all = navEls.concat(gridEls).concat(footerEls);
-  for (var i = 0; i < all.length; i++) all[i].classList.remove('focused');
+function clearAllFocus(){
+  var all=navEls.concat(gridEls).concat(footerEls);
+  for(var i=0;i<all.length;i++) all[i].classList.remove('focused');
 }
-
-function applyFocusEl(el) {
-  clearAllFocus();
-  el.classList.add('focused');
-  el.focus({ preventScroll: true });
-  scrollIntoView(el);
+function applyFocusEl(el){
+  clearAllFocus();el.classList.add('focused');
+  el.focus({preventScroll:true});scrollIntoView(el);
 }
+function scrollIntoView(el){
+  if(!el||!mainEl)return;
 
-function scrollIntoView(el) {
-  if (!el) return;
-  var r  = el.getBoundingClientRect();
-  var mr = mainEl.getBoundingClientRect();
-  if (r.bottom > mr.bottom - 20) mainEl.scrollTop += r.bottom - mr.bottom + 40;
-  if (r.top    < mr.top    + 20) mainEl.scrollTop -= mr.top   - r.top    + 40;
+  /* offsetTop = posição ABSOLUTA do elemento dentro do scroll container.
+     Isso evita o bug de rects obsoletos no Tizen que causam o scroll
+     acumulativo (vai pra baixo e volta). */
+  var elTop    = el.offsetTop;
+  var elBottom = elTop + el.offsetHeight;
+  var viewTop  = mainEl.scrollTop;
+  var viewH    = mainEl.clientHeight;
+  var viewBot  = viewTop + viewH;
+  var margin   = 48;
+
+  if(elBottom > viewBot - margin){
+    /* elemento abaixo da área visível → rola para baixo */
+    mainEl.scrollTop = elBottom - viewH + margin;
+  } else if(elTop < viewTop + margin){
+    /* elemento acima da área visível → rola para cima */
+    mainEl.scrollTop = elTop - margin;
+  }
+  /* se já está visível: não faz nada — evita qualquer salto */
 }
+function gridRow(i){return Math.floor(i/COLS);}
+function gridCol(i){return i%COLS;}
+function gridRows(){return Math.ceil(gridEls.length/COLS);}
+function isFirstRow(i){return gridRow(i)===0;}
+function isLastRow(i){return gridRow(i)===gridRows()-1;}
 
-function gridRow(i)   { return Math.floor(i / COLS); }
-function gridCol(i)   { return i % COLS; }
-function gridRows()   { return Math.ceil(gridEls.length / COLS); }
-function isFirstRow(i){ return gridRow(i) === 0; }
-function isLastRow(i) { return gridRow(i) === gridRows() - 1; }
-
-function enterNav(idx) {
-  currentZone = ZONE_NAV;
-  if (idx !== undefined) navIndex = idx;
-  navIndex = Math.max(0, Math.min(navIndex, navEls.length - 1));
+function enterNav(idx){
+  currentZone=ZONE_NAV;
+  if(idx!==undefined) navIndex=idx;
+  navIndex=Math.max(0,Math.min(navIndex,navEls.length-1));
   applyFocusEl(navEls[navIndex]);
-  var wrap = document.getElementById('nav-wrap');
-  var btn  = navEls[navIndex];
-  if (wrap && btn) {
-    var bL=btn.offsetLeft, bW=btn.offsetWidth, wW=wrap.offsetWidth;
-    if (bL+bW > wrap.scrollLeft+wW) wrap.scrollLeft=bL+bW-wW+16;
-    if (bL    < wrap.scrollLeft)    wrap.scrollLeft=bL-16;
+  var wrap=document.getElementById('nav-wrap'),btn=navEls[navIndex];
+  if(wrap&&btn){
+    var bL=btn.offsetLeft,bW=btn.offsetWidth,wW=wrap.offsetWidth;
+    if(bL+bW>wrap.scrollLeft+wW) wrap.scrollLeft=bL+bW-wW+16;
+    if(bL<wrap.scrollLeft)       wrap.scrollLeft=bL-16;
   }
 }
-
-function enterGrid(idx) {
-  if (!gridEls.length) return;
-  currentZone = ZONE_GRID;
-  if (idx !== undefined) gridIndex = idx;
-  gridIndex = Math.max(0, Math.min(gridIndex, gridEls.length - 1));
+function enterGrid(idx){
+  if(!gridEls.length)return;
+  currentZone=ZONE_GRID;
+  if(idx!==undefined) gridIndex=idx;
+  gridIndex=Math.max(0,Math.min(gridIndex,gridEls.length-1));
   applyFocusEl(gridEls[gridIndex]);
 }
-
-function enterFooter(idx) {
-  if (!footerEls.length) return;
-  currentZone = ZONE_FOOTER;
-  if (idx !== undefined) footerIndex = idx;
-  footerIndex = Math.max(0, Math.min(footerIndex, footerEls.length - 1));
+function enterFooter(idx){
+  if(!footerEls.length)return;
+  currentZone=ZONE_FOOTER;
+  if(idx!==undefined) footerIndex=idx;
+  footerIndex=Math.max(0,Math.min(footerIndex,footerEls.length-1));
   applyFocusEl(footerEls[footerIndex]);
 }
-
-function gridEntryFromTop() {
-  return Math.min(savedGridCol, Math.min(COLS, gridEls.length) - 1);
+function gridEntryFromTop(){return Math.min(savedGridCol,Math.min(COLS,gridEls.length)-1);}
+function gridEntryFromBottom(){
+  var lrs=(gridRows()-1)*COLS,lrc=gridEls.length-lrs;
+  return lrs+Math.min(savedGridCol,lrc-1);
 }
-function gridEntryFromBottom() {
-  var lrs = (gridRows() - 1) * COLS;
-  var lrc = gridEls.length - lrs;
-  return lrs + Math.min(savedGridCol, lrc - 1);
-}
-
-function detectCols() {
-  var grid = document.getElementById('matches-grid');
-  if (!grid || !gridEls.length) return;
-  var tpl = window.getComputedStyle(grid).getPropertyValue('grid-template-columns');
-  if (tpl) { var p = tpl.trim().split(/\s+/); if (p.length) COLS = p.length; }
+function detectCols(){
+  var grid=document.getElementById('matches-grid');
+  if(!grid||!gridEls.length)return;
+  var tpl=window.getComputedStyle(grid).getPropertyValue('grid-template-columns');
+  if(tpl){var p=tpl.trim().split(/\s+/);if(p.length)COLS=p.length;}
 }
 
-var KU=[38], KD=[40], KL=[37], KR=[39], KE=[13], KB=[8,10009];
-function inK(c, a) { for (var i=0;i<a.length;i++) if(a[i]===c) return true; return false; }
+var KU=[38],KD=[40],KL=[37],KR=[39],KE=[13],KB=[8,10009,27];
+function inK(c,a){for(var i=0;i<a.length;i++)if(a[i]===c)return true;return false;}
 
-document.addEventListener('keydown', function(e) {
-  var kc = e.keyCode;
-
-  if (drawerOpen) {
-    if      (inK(kc,KB)) { e.preventDefault(); closeDrawer(); }
-    else if (inK(kc,KD)) { e.preventDefault(); drawerEl.scrollTop += 140; }
-    else if (inK(kc,KU)) { e.preventDefault(); drawerEl.scrollTop -= 140; }
+document.addEventListener('keydown',function(e){
+  var kc=e.keyCode;
+  if(drawerOpen){
+    if(inK(kc,KB)){e.preventDefault();closeDrawer();}
+    else if(inK(kc,KD)){e.preventDefault();drawerEl.scrollTop+=140;}
+    else if(inK(kc,KU)){e.preventDefault();drawerEl.scrollTop-=140;}
     return;
   }
-
-  if (inK(kc,KB)) { e.preventDefault(); mainEl.scrollTop=0; enterNav(0); return; }
+  if(inK(kc,KB)){e.preventDefault();mainEl.scrollTop=0;enterNav(0);return;}
   e.preventDefault();
-
-  if (currentZone === ZONE_NAV) {
-    if      (inK(kc,KL)) { if(navIndex>0){navIndex--;enterNav();} }
-    else if (inK(kc,KR)) { if(navIndex<navEls.length-1){navIndex++;enterNav();} }
-    else if (inK(kc,KD)) { if(gridEls.length>0) enterGrid(gridEntryFromTop()); }
-    else if (inK(kc,KE)) { navEls[navIndex].click(); }
+  if(currentZone===ZONE_NAV){
+    if(inK(kc,KL)){if(navIndex>0){navIndex--;enterNav();}}
+    else if(inK(kc,KR)){if(navIndex<navEls.length-1){navIndex++;enterNav();}}
+    else if(inK(kc,KD)){if(gridEls.length>0)enterGrid(gridEntryFromTop());}
+    else if(inK(kc,KE)){navEls[navIndex].click();}
     return;
   }
-
-  if (currentZone === ZONE_GRID) {
-    var col = gridCol(gridIndex);
-    if      (inK(kc,KL)) { if(col>0){gridIndex--;savedGridCol=gridCol(gridIndex);enterGrid();} }
-    else if (inK(kc,KR)) { if(col<COLS-1&&gridIndex+1<gridEls.length){gridIndex++;savedGridCol=gridCol(gridIndex);enterGrid();} }
-    else if (inK(kc,KU)) {
+  if(currentZone===ZONE_GRID){
+    /* Sincronizar COLS com o layout real antes de qualquer cálculo */
+    detectCols();
+    var col=gridCol(gridIndex);
+    if(inK(kc,KL)){
+      if(col>0){gridIndex--;savedGridCol=gridCol(gridIndex);enterGrid();}
+    } else if(inK(kc,KR)){
+      if(col<COLS-1&&gridIndex+1<gridEls.length){gridIndex++;savedGridCol=gridCol(gridIndex);enterGrid();}
+    } else if(inK(kc,KU)){
       if(isFirstRow(gridIndex)){savedGridCol=col;enterNav();}
       else{var t=gridIndex-COLS;if(t>=0){gridIndex=t;savedGridCol=gridCol(gridIndex);enterGrid();}}
-    } else if (inK(kc,KD)) {
-      if(isLastRow(gridIndex)){savedGridCol=col;if(footerEls.length>0)enterFooter(0);}
-      else{var td=gridIndex+COLS;gridIndex=td<gridEls.length?td:gridEls.length-1;savedGridCol=gridCol(gridIndex);enterGrid();}
-    } else if (inK(kc,KE)) {
+    } else if(inK(kc,KD)){
+      if(isLastRow(gridIndex)){
+        savedGridCol=col;
+        if(footerEls.length>0) enterFooter(0);
+        /* se não há footer, permanece no último card */
+      } else {
+        var td=gridIndex+COLS;
+        gridIndex=td<gridEls.length?td:gridEls.length-1;
+        savedGridCol=gridCol(gridIndex);
+        enterGrid();
+      }
+    } else if(inK(kc,KE)){
       var card=gridEls[gridIndex];
       if(card){drawerSrcIdx=gridIndex;openDrawer(currentFixtures[gridIndex]);}
     }
     return;
   }
-
-  if (currentZone === ZONE_FOOTER) {
-    if      (inK(kc,KL)) { if(footerIndex>0){footerIndex--;enterFooter();} }
-    else if (inK(kc,KR)) { if(footerIndex<footerEls.length-1){footerIndex++;enterFooter();} }
-    else if (inK(kc,KU)) { if(gridEls.length>0)enterGrid(gridEntryFromBottom());else enterNav(); }
-    else if (inK(kc,KE)) { footerEls[footerIndex].click(); }
+  if(currentZone===ZONE_FOOTER){
+    if(inK(kc,KL)){if(footerIndex>0){footerIndex--;enterFooter();}}
+    else if(inK(kc,KR)){if(footerIndex<footerEls.length-1){footerIndex++;enterFooter();}}
+    else if(inK(kc,KU)){if(gridEls.length>0)enterGrid(gridEntryFromBottom());else enterNav();}
+    else if(inK(kc,KE)){footerEls[footerIndex].click();}
     return;
   }
 });
 
-document.addEventListener('mouseover', function(e) {
-  if (drawerOpen) return;
-  var el = e.target && e.target.closest ? e.target.closest('.focusable') : null;
-  if (!el) return;
-  var ni=navEls.indexOf(el); if(ni>=0){currentZone=ZONE_NAV;navIndex=ni;applyFocusEl(el);return;}
-  var gi=gridEls.indexOf(el); if(gi>=0){currentZone=ZONE_GRID;gridIndex=gi;savedGridCol=gridCol(gi);applyFocusEl(el);return;}
-  var fi=footerEls.indexOf(el); if(fi>=0){currentZone=ZONE_FOOTER;footerIndex=fi;applyFocusEl(el);return;}
+document.addEventListener('mouseover',function(e){
+  if(drawerOpen)return;
+  var el=e.target&&e.target.closest?e.target.closest('.focusable'):null;
+  if(!el)return;
+  var ni=navEls.indexOf(el);if(ni>=0){currentZone=ZONE_NAV;navIndex=ni;applyFocusEl(el);return;}
+  var gi=gridEls.indexOf(el);if(gi>=0){currentZone=ZONE_GRID;gridIndex=gi;savedGridCol=gridCol(gi);applyFocusEl(el);return;}
+  var fi=footerEls.indexOf(el);if(fi>=0){currentZone=ZONE_FOOTER;footerIndex=fi;applyFocusEl(el);return;}
 });
 
-if (typeof tizen !== 'undefined') { try { tizen.tvinputdevice.registerKey('Back'); } catch(ex) {} }
+if(typeof tizen!=='undefined'){
+  try{tizen.tvinputdevice.registerKey('Back');tizen.tvinputdevice.registerKey('XF86Back');}catch(ex){}
+}
 
-/* ═══════════════════════════════════════════════════════════════
-   BOOT — Splash screen → App
-═══════════════════════════════════════════════════════════════ */
-rebuildZones();
-detectCols();
+/* ── BOOT ─────────────────────────────────────────────────── */
+rebuildZones();detectCols();
 
-(function() {
-  var splash  = document.getElementById('splash');
-  var app     = document.getElementById('app');
-  var SPLASH_DURATION = 3000; /* ms total antes do fade-out     */
-  var FADE_DURATION   =  700; /* ms do fade-out (CSS transition) */
+(function(){
+  var splash=document.getElementById('splash');
+  var app=document.getElementById('app');
+  var SPLASH_DURATION=3000,FADE_DURATION=700;
 
-  /* Inicia carregamento de dados em paralelo com a splash */
-  loadFilter('all', '', '');
+  loadFilter('all');
 
-  /* Após SPLASH_DURATION, fade-out da splash e mostra o app */
-  setTimeout(function() {
-    /* 1. Fade-out splash */
+  setTimeout(function(){
     splash.classList.add('hide');
-
-    /* 2. Mostra o app e dispara animações de entrada */
     app.classList.add('app-visible');
+    setTimeout(function(){if(splash.parentNode)splash.parentNode.removeChild(splash);},FADE_DURATION+100);
+    setTimeout(function(){enterNav(0);},FADE_DURATION);
+  },SPLASH_DURATION);
 
-    /* 3. Remove splash do DOM após a transição */
-    setTimeout(function() {
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-    }, FADE_DURATION + 100);
-
-    /* 4. Inicializa foco após a transição */
-    setTimeout(function() {
-      enterNav(0);
-    }, FADE_DURATION);
-
-  }, SPLASH_DURATION);
-
-  /* Stagger delay nos cards quando forem renderizados */
-  /* O renderMatches chama rebuildZones — interceptamos com MutationObserver */
-  var grid = document.getElementById('matches-grid');
-  var observer = new MutationObserver(function() {
-    var cards = grid.querySelectorAll('.match-card');
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].style.animationDelay = (i * 0.05) + 's';
-    }
+  var grid=document.getElementById('matches-grid');
+  var observer=new MutationObserver(function(){
+    var cards=grid.querySelectorAll('.match-card');
+    for(var i=0;i<cards.length;i++) cards[i].style.animationDelay=(i*0.05)+'s';
   });
-  if (grid) {
-    observer.observe(grid, { childList: true });
-  }
+  if(grid) observer.observe(grid,{childList:true});
 })();
-
 </script>
 </body>
 </html>
