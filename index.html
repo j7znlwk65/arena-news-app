@@ -41,7 +41,7 @@ html,body{
 header{flex-shrink:0;height:88px;width:100%;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 64px;gap:56px;}
 .logo{flex-shrink:0;display:flex;align-items:center;}
 .logo-svg{display:block;}
-.nav-wrap{flex:1;display:flex;align-items:center;position:relative;background:var(--bg3);border-radius:100px;height:var(--pill-h);padding:4px;border:1px solid var(--border);overflow:hidden;}
+.nav-wrap{flex:1;display:flex;align-items:center;position:relative;background:var(--bg3);border-radius:100px;height:var(--pill-h);padding:4px;border:1px solid var(--border);overflow-x:auto;overflow-y:hidden;scroll-behavior:smooth;}.nav-wrap::-webkit-scrollbar{display:none;}
 .nav-track{position:absolute;top:4px;bottom:4px;left:4px;background:var(--white);border-radius:100px;transition:left .25s cubic-bezier(.4,0,.2,1),width .25s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;}
 .nav-btn{position:relative;z-index:2;height:calc(var(--pill-h) - 8px);padding:0 28px;border-radius:100px;border:2px solid transparent;background:transparent;color:var(--white);font-family:var(--f-body);font-size:var(--fnav);font-weight:600;cursor:pointer;white-space:nowrap;transition:color var(--tr);outline:none;flex-shrink:0;}
 .nav-btn.active{color:var(--bg)!important;}
@@ -1042,10 +1042,23 @@ var track   = document.getElementById('nav-track');
 
 function updateTrack(btn) {
   var wrap = document.getElementById('nav-wrap');
-  var wR = wrap.getBoundingClientRect();
-  var bR = btn.getBoundingClientRect();
-  track.style.left  = (bR.left - wR.left) + 'px';
-  track.style.width = bR.width + 'px';
+  /* offsetLeft = posição real do botão dentro do pai, independente do scroll */
+  track.style.left  = btn.offsetLeft + 'px';
+  track.style.width = btn.offsetWidth + 'px';
+
+  /* Rola o nav-wrap para que o botão ativo fique visível */
+  var btnLeft  = btn.offsetLeft;
+  var btnRight = btn.offsetLeft + btn.offsetWidth;
+  var wrapW    = wrap.offsetWidth;
+  var scroll   = wrap.scrollLeft;
+
+  if (btnLeft < scroll + 8) {
+    /* botão saiu pela esquerda */
+    wrap.scrollLeft = btnLeft - 8;
+  } else if (btnRight > scroll + wrapW - 8) {
+    /* botão saiu pela direita */
+    wrap.scrollLeft = btnRight - wrapW + 8;
+  }
 }
 setTimeout(function() {
   var a = document.querySelector('.nav-btn.active');
